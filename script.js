@@ -303,26 +303,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 const teamCard = document.createElement('div');
                 teamCard.classList.add('team-card');
                 
+                // Format phone number for WhatsApp API (remove spaces, dashes, and add country code)
+                const cleanPhone = team.contact.phone.replace(/[^0-9]/g, '');
+                const waLink = `https://wa.me/${cleanPhone}`;
+                
                 teamCard.innerHTML = `
                     <h3>${teamName}</h3>
                     <p class="team-stats">${team.players.length} Players</p>
-                    <p class="team-contact"><strong>Contact:</strong> ${team.contact.name} (${team.contact.phone})</p>
+                    <p class="team-contact"><strong>Contact:</strong> <a href="${waLink}" target="_blank">${team.contact.name}</a> (${team.contact.phone})</p>
                     <ul>
                         ${team.players.map(player => `<li>${player}</li>`).join('')}
                     </ul>
                 `;
                 
                 teamCard.addEventListener('click', () => {
+                    // Format phone number for WhatsApp API (remove spaces, dashes, and add country code)
+                    const cleanPhone = team.contact.phone.replace(/[^0-9]/g, '');
+                    const waLink = `https://wa.me/${cleanPhone}`;
+                    
                     modalContent.innerHTML = `
                         <h2>${teamName}</h2>
                         <div class="team-detail-stats">Players (${team.players.length})</div>
                         <div class="team-detail-contact">
                             <h3>Contact: ${team.contact.name}</h3>
-                            <p>${team.contact.phone}</p>
+                            <p>
+                                <a href="${waLink}" class="wa-button" target="_blank">
+                                    <i class="fab fa-whatsapp"></i> Chat via WhatsApp
+                                </a>
+                            </p>
                         </div>
-                        <ul>
-                            ${team.players.map(player => `<li>${player}</li>`).join('')}
-                        </ul>
+                        <div class="players-list">
+                            <h3>Players List</h3>
+                            <ul class="player-grid">
+                                ${team.players.map(player => `<li class="player-item">${player}</li>`).join('')}
+                            </ul>
+                        </div>
                     `;
                     modal.classList.add('active');
                 });

@@ -614,6 +614,75 @@ body {
     margin: 10px 0;
 }
 
+.team-contact a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.team-contact a:hover {
+    text-decoration: underline;
+}
+
+.wa-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #25D366;
+    color: white;
+    padding: 10px 15px;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.wa-button:hover {
+    background: #128C7E;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+}
+
+.wa-button i {
+    margin-right: 8px;
+}
+
+.players-list {
+    margin-top: 20px;
+}
+
+.players-list h3 {
+    color: var(--accent-color);
+    text-align: center;
+    margin-bottom: 15px;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.player-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+}
+
+.player-item {
+    background: rgba(26, 26, 26, 0.7);
+    border: 1px solid var(--accent-color);
+    border-radius: var(--border-radius);
+    padding: 10px;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.player-item:hover {
+    background: rgba(0, 255, 255, 0.1);
+    transform: translateY(-3px);
+    border-color: var(--accent-secondary);
+}
+
 /* Footer */
 
 
@@ -820,4 +889,63 @@ body {
     background: rgba(0, 255, 0, 0.1);
     border-left: 3px solid var(--success-color);
     padding-left: 10px;
+}
+
+/* Notes section styling */
+.notes-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(26, 26, 26, 0.6);
+    border: 1px solid var(--accent-color);
+    border-radius: var(--border-radius);
+}
+
+.notes-section h3 {
+    color: var(--accent-color);
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.notes-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.notes-section li {
+    padding: 8px 0;
+    padding-left: 25px;
+    position: relative;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+}
+
+.notes-section li:last-child {
+    border-bottom: none;
+}
+
+.notes-section li::before {
+    content: '▶';
+    color: var(--accent-color);
+    position: absolute;
+    left: 0;
+    top: 8px;
+}
+
+.notes-section .sub-list {
+    margin: 10px 0 10px 20px;
+    padding-left: 15px;
+    border-left: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.notes-section .sub-list li {
+    color: var(--text-color);
+    border-bottom: none;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.notes-section .sub-list li::before {
+    content: '•';
+    color: var(--accent-secondary);
 }
