@@ -62,15 +62,16 @@ body {
 
 /* Navigation */
 .navbar {
-    background: rgba(10, 10, 10, 0.9);
+    background: rgba(10, 10, 10, 0.95);
     backdrop-filter: blur(10px);
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 1000;
-    padding: 15px 0;
+    padding: 10px 0;
     border-bottom: 1px solid var(--accent-color);
-    box-shadow: 0 0 20px var(--glow-color);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
 }
 
 .nav-container {
@@ -80,6 +81,24 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
+}
+
+.logo h1 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent-color);
+    text-shadow: 0 0 10px var(--glow-color);
+    font-size: 1.3rem;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo h1 i {
+    font-size: 1.5rem;
 }
 
 .logo h1 {
@@ -129,6 +148,7 @@ body {
     display: none;
     flex-direction: column;
     cursor: pointer;
+    z-index: 1001;
 }
 
 .bar {
@@ -137,6 +157,19 @@ body {
     background-color: var(--text-color);
     margin: 3px 0;
     transition: var(--transition);
+}
+
+/* Hamburger animation when active */
+.hamburger.active .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger.active .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
 }
 
 /* Hero Section */
@@ -612,28 +645,22 @@ body {
         display: block;
     }
     
-    .hero-title {
-        font-size: 2.5rem;
+    .logo h1 {
+        font-size: 1.8rem; /* Make the logo smaller but keep the icon */
     }
     
-    .hero-subtitle {
-        font-size: 1.2rem;
+    .logo h1 i {
+        display: inline-block;
     }
     
-    .hero-stats {
-        flex-direction: column;
-        gap: 20px;
+    .logo h1 span {
+        display: none; /* Hide the text part of the logo */
     }
     
     .section-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
-    }
-    
-    .hero-buttons {
-        flex-direction: column;
-        align-items: center;
     }
     
     .match-teams {
@@ -653,6 +680,110 @@ body {
     .team-left,
     .team-right {
         justify-content: center;
+    }
+    
+    /* Leaderboard table mobile optimization */
+    .leaderboard-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    /* Adjust font sizes for smaller screens */
+    .section-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    /* Team cards adjustments */
+    .teams-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Match card adjustments */
+    .schedule-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Modal adjustments */
+    .modal-content {
+        width: 95%;
+        margin: 20px auto;
+    }
+    
+    /* Stats adjustments */
+    .team-stats, 
+    .team-contact {
+        font-size: 0.9rem;
+        padding: 6px;
+    }
+    
+    /* Match details adjustments */
+    .match-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* For very small screens, show only the gamepad icon */
+@media (max-width: 480px) {
+    .logo h1 {
+        font-size: 1.5rem;
+    }
+    
+    .logo h1 span {
+        display: none;
+    }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .section {
+        padding: 40px 0;
+    }
+    
+    .logo h1 {
+        font-size: 1.2rem;
+    }
+    
+    .controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .tab-btn {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+        margin-bottom: 5px;
+    }
+    
+    .match-status {
+        font-size: 0.7rem;
+    }
+    
+    .team-score {
+        font-size: 1.5rem;
+    }
+    
+    .team-info h3 {
+        font-size: 1.2rem;
+    }
+    
+    .vs {
+        font-size: 1.2rem;
+    }
+    
+    /* Adjust team cards for very small screens */
+    .team-card {
+        padding: 15px;
+    }
+    
+    /* Adjust modal for very small screens */
+    .team-detail-content {
+        padding: 20px;
     }
 }
 

@@ -17,6 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 hamburger.classList.remove('active');
             });
         });
+        
+        // Close menu when clicking outside of it
+        document.addEventListener('click', (event) => {
+            if (!navMenu.contains(event.target) && !hamburger.contains(event.target)) {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
     }
     
     // Scroll spy for active navigation
