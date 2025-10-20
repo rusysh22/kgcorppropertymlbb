@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KG CORPORATE/PROPERTY - MLBB Tournament</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='50%' x='50%' text-anchor='middle' dominant-baseline='middle' font-size='40' fill='%2300ffff'%3EKG%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+</head>
+<body>
+    <!-- Background Elements -->
+    <div id="stars"></div>
+    <div id="particles-js"></div>
+    
+    <!-- Main Content -->
+    <div class="wrapper">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1><i class="fas fa-gamepad"></i> KG CORPORATE/PROPERTY MLBB</h1>
+                </div>
+                <div class="nav-menu" id="nav-menu">
+                    <a href="#schedule" class="nav-link active">Schedule</a>
+                    <a href="#live" class="nav-link">Today Matches</a>
+                    <a href="#results" class="nav-link">Results</a>
+                    <a href="#leaderboard" class="nav-link">Leaderboard</a>
+                    <a href="#teams" class="nav-link">Teams</a>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+
+
+
+        <!-- Live Matches Section -->
+        <section id="live" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2><i class="fas fa-bolt"></i> TODAY MATCHES</h2>
+                    <div class="live-indicator">
+                        <span class="live-dot"></span> TODAY
+                    </div>
+                </div>
+                <div class="matches-container">
+                    <div class="match-card live-match">
+                        <div class="match-header">
+                            <span class="match-status live">TODAY</span>
+                            <span class="match-timer">01:23:45</span>
+                        </div>
+                        <div class="match-teams">
+                            <div class="team team-left">
+                                <div class="team-info">
+                                    <h3>ENG</h3>
+                                </div>
+                                <div class="team-score">
+                                    <span class="score">3</span>
+                                </div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team team-right">
+                                <div class="team-score">
+                                    <span class="score">1</span>
+                                </div>
+                                <div class="team-info">
+                                    <h3>CFP</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Schedule Section -->
+        <section id="schedule" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2><i class="fas fa-calendar-alt"></i> MATCH SCHEDULE</h2>
+                    <div class="controls">
+                        <button class="tab-btn active" data-tab="upcoming">UPCOMING</button>
+                        <button class="tab-btn" data-tab="completed">COMPLETED</button>
+                    </div>
+                </div>
+                <div class="schedule-tabs">
+                    <div class="tab-content active" id="upcoming-tab">
+                        <div class="schedule-grid">
+                            <!-- Upcoming matches will be dynamically inserted here -->
+                        </div>
+                    </div>
+                    <div class="tab-content" id="completed-tab">
+                        <div class="schedule-grid">
+                            <!-- Completed matches will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2><i class="fas fa-trophy"></i> RECENT RESULTS</h2>
+                </div>
+                <div class="results-grid">
+                    <!-- Recent results will be dynamically inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Leaderboard Section -->
+        <section id="leaderboard" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2><i class="fas fa-ranking-star"></i> LEADERBOARD</h2>
+                </div>
+                <div class="leaderboard-container">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Team</th>
+                                <th>P</th>
+                                <th>W</th>
+                                <th>D</th>
+                                <th>L</th>
+                                <th>PTS</th>
+                                <th>Form</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Leaderboard data will be dynamically inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Teams Section -->
+        <section id="teams" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2><i class="fas fa-users"></i> TEAMS</h2>
+                </div>
+                <div class="teams-grid">
+                    <!-- Teams will be dynamically inserted here -->
+                </div>
+                <div class="team-detail-modal">
+                    <div class="modal-content">
+                        <span class="close-modal">&times;</span>
+                        <div class="team-detail-content">
+                            <!-- Team details will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
