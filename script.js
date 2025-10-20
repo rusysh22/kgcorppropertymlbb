@@ -1,93 +1,15 @@
+// KG CORPORATE/PROPERTY MLBB Tournament Website
 // Gaming - Interactive Tournament Website
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Navigation and menu toggle
-    const hamburger = document.getElementById('hamburger');
-    const navMenu = document.getElementById('nav-menu');
-    
-    if (hamburger && navMenu) {
-        hamburger.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            hamburger.classList.toggle('active');
-        });
-        
-        // Close menu when clicking on a link
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-                hamburger.classList.remove('active');
-            });
-        });
-        
-        // Close menu when clicking outside of it
-        document.addEventListener('click', (event) => {
-            if (!navMenu.contains(event.target) && !hamburger.contains(event.target)) {
-                navMenu.classList.remove('active');
-                hamburger.classList.remove('active');
-            }
-        });
-    }
-    
-    // Scroll spy for active navigation
-    window.addEventListener('scroll', () => {
-        const sections = document.querySelectorAll('.section');
-        const navLinks = document.querySelectorAll('.nav-link');
-        
-        let current = '';
-        
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-            
-            if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
-                current = section.getAttribute('id');
-            }
-        });
-        
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href').includes(current)) {
-                link.classList.add('active');
-            }
-        });
-    });
-    
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 70,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-    
-    // Tab functionality for schedule
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const tabId = btn.getAttribute('data-tab');
-            
-            // Remove active class from all buttons and content
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            
-            // Add active class to clicked button and corresponding content
-            btn.classList.add('active');
-            document.getElementById(`${tabId}-tab`).classList.add('active');
-        });
-    });
+    // ========================
+    // Configuration & Data
+    // ========================
     
     // Sample data - matches with live status for match 1 and 2, and upcoming matches scheduled from Oct 21-24, 2025
     const matches = [
         { id: 1, team1: 'ENG', team2: 'AUDIT', status: 'completed', date: '2025-01-20', time: '17:00', score: { team1: 0, team2: 2 }, winner: 'AUDIT', completed: true },
-        { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'pending', date: '2025-01-20', time: '17:30', score: null, winner: null, completed: false },
+        { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'completed', date: '2025-01-20', time: '17:30', score: { team1: 1, team2: 1 }, winner: null, completed: true },
         { id: 3, team1: 'CFP', team2: 'ENG', status: 'upcoming', date: '2025-10-21', time: '17:00', score: null, winner: null, completed: false },
         { id: 4, team1: 'CFP', team2: 'CITIS', status: 'upcoming', date: '2025-10-21', time: '18:00', score: null, winner: null, completed: false },
         { id: 5, team1: 'ACC/TAX/FSD', team2: 'AUDIT', status: 'upcoming', date: '2025-10-22', time: '17:00', score: null, winner: null, completed: false },
@@ -120,11 +42,117 @@ document.addEventListener('DOMContentLoaded', () => {
             contact: { name: 'Yori', phone: '+62 877-7556-8776' }
         },
         'AUDIT': { 
-            players: ['Superjorrr (cici)', 'Iyelito', 'Koro', 'SquishyJorr', 'TBC'],
+            players: ['Superjorrr (cici)', 'Iyelito', 'Koro', 'SquishyJorr', 'Na0mi Tier 1A.'],
             color: '#33ff57',
             contact: { name: 'Yoga', phone: '+62 838-1672-7039' }
         }
     };
+
+    // ========================
+    // DOM Elements
+    // ========================
+    
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+    const starsContainer = document.getElementById('stars');
+    const particlesContainer = document.getElementById('particles-js');
+
+    // ========================
+    // Navigation Functions
+    // ========================
+    
+    // Initialize navigation menu toggle
+    function initNavigation() {
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                hamburger.classList.toggle('active');
+            });
+            
+            // Close menu when clicking on a link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                    hamburger.classList.remove('active');
+                });
+            });
+            
+            // Close menu when clicking outside of it
+            document.addEventListener('click', (event) => {
+                if (!navMenu.contains(event.target) && !hamburger.contains(event.target)) {
+                    navMenu.classList.remove('active');
+                    hamburger.classList.remove('active');
+                }
+            });
+        }
+    }
+    
+    // Scroll spy for active navigation
+    function initScrollSpy() {
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    }
+    
+    // Smooth scrolling for anchor links
+    function initSmoothScrolling() {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    }
+    
+    // Tab functionality for schedule
+    function initTabs() {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+                
+                // Remove active class from all buttons and content
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                btn.classList.add('active');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+    }
+
+    // ========================
+    // Data Processing Functions
+    // ========================
     
     // Calculate standings
     function calculateStandings(matches) {
@@ -193,6 +221,10 @@ document.addEventListener('DOMContentLoaded', () => {
             b.wins - a.wins
         );
     }
+
+    // ========================
+    // Rendering Functions
+    // ========================
     
     // Render schedule
     function renderSchedule() {
@@ -205,10 +237,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const completedMatches = matches
             .filter(match => match.completed)
             .sort((a, b) => new Date(b.date) - new Date(a.date));
-        
+
         const upcomingContainer = document.querySelector('#upcoming-tab .schedule-grid');
         const completedContainer = document.querySelector('#completed-tab .schedule-grid');
-        
+
         if (upcomingContainer) {
             upcomingContainer.innerHTML = '';
             upcomingMatches.forEach(match => {
@@ -239,13 +271,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 upcomingContainer.appendChild(matchCard);
             });
         }
-        
+
         if (completedContainer) {
             completedContainer.innerHTML = '';
             completedMatches.forEach(match => {
                 const matchCard = document.createElement('div');
                 matchCard.classList.add('match-card');
-                
+
                 matchCard.innerHTML = `
                     <div class="match-header">
                         <span class="match-status">COMPLETED</span>
@@ -270,6 +302,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                     </div>
+                    <div class="match-result-actions">
+                        <button class="view-result-btn" data-match-id="${match.id}">View Result</button>
+                    </div>
                     <div class="match-details">
                         <p><i class="fas fa-trophy"></i> Winner: ${match.winner || 'Draw'}</p>
                         <p><i class="fas fa-calendar"></i> ${match.date} at ${match.time}</p>
@@ -286,9 +321,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const completedMatches = matches
             .filter(match => match.completed)
             .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
-        
+
         const resultsContainer = document.querySelector('.results-grid');
-        
+
         if (resultsContainer) {
             resultsContainer.innerHTML = '<p class="no-results">No results yet. Check back after matches are completed.</p>';
         }
@@ -298,13 +333,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderLeaderboard() {
         const standings = calculateStandings(matches);
         const leaderboardBody = document.querySelector('.leaderboard-table tbody');
-        
+
         if (leaderboardBody) {
             leaderboardBody.innerHTML = '';
-            
+
             standings.forEach((team, index) => {
                 const row = document.createElement('tr');
-                
+
                 // Format form string (show last 5 matches)
                 let formString = '';
                 if (team.form.length > 0) {
@@ -312,10 +347,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     formString = 'N/A';
                 }
-                
+
                 // Calculate total matches played
                 const played = team.wins + team.losses + team.draws;
-                
+
                 // Create form indicators HTML using colored circles
                 let formIndicators = '';
                 if (team.form.length > 0) {
@@ -354,24 +389,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const modal = document.querySelector('.team-detail-modal');
         const modalContent = document.querySelector('.team-detail-content');
         const closeModal = document.querySelector('.close-modal');
-        
+
         if (teamsContainer) {
             teamsContainer.innerHTML = '';
-            
+
             Object.keys(teamsData).forEach(teamName => {
                 const team = teamsData[teamName];
                 const teamCard = document.createElement('div');
                 teamCard.classList.add('team-card');
-                
+
                 // Format phone number for WhatsApp API (remove spaces, dashes, and add country code)
                 const cleanPhone = team.contact.phone.replace(/[^0-9]/g, '');
                 const waLink = `https://wa.me/${cleanPhone}`;
-                
+
                 // Generate player list for team card (no animation)
                 const playerList = team.players.map(player => {
                     return `<li title="${player}">${player}</li>`;
                 }).join('');
-                
+
                 teamCard.innerHTML = `
                     <h3>${teamName}</h3>
                     <p class="team-stats">${team.players.length} Players</p>
@@ -380,12 +415,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         ${playerList}
                     </ul>
                 `;
-                
+
                 teamCard.addEventListener('click', () => {
                     // Format phone number for WhatsApp API (remove spaces, dashes, and add country code)
                     const cleanPhone = team.contact.phone.replace(/[^0-9]/g, '');
                     const waLink = `https://wa.me/${cleanPhone}`;
-                    
+
                     // Generate player list with animation for long names in modal
                     const playerModalList = team.players.map(player => {
                         const isLongName = player.length > 15; // Consider names longer than 15 chars as long
@@ -395,7 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             return `<li class="player-item">${player}</li>`;
                         }
                     }).join('');
-                    
+
                     modalContent.innerHTML = `
                         <h2>${teamName}</h2>
                         <div class="team-detail-stats">Players (${team.players.length})</div>
@@ -416,18 +451,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                     modal.classList.add('active');
                 });
-                
+
                 teamsContainer.appendChild(teamCard);
             });
         }
-        
+
         // Close modal functionality
         if (closeModal) {
             closeModal.addEventListener('click', () => {
                 modal.classList.remove('active');
             });
         }
-        
+
         // Close modal when clicking outside of content
         if (modal) {
             modal.addEventListener('click', (e) => {
@@ -437,10 +472,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
+
+    // ========================
+    // Visual Effects & Animations
+    // ========================
     
     // Create animated stars background
     function createStars() {
-        const starsContainer = document.getElementById('stars');
         if (starsContainer) {
             for (let i = 0; i < 150; i++) {
                 const star = document.createElement('div');
@@ -458,7 +496,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize particles.js if the library is loaded
     function initParticles() {
-        const particlesContainer = document.getElementById('particles-js');
         if (particlesContainer && typeof particlesJS !== 'undefined') {
             particlesJS('particles-js', {
                 particles: {
@@ -547,7 +584,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function addCountdowns() {
         // Find upcoming matches and add countdowns to their timers
         const upcomingMatches = matches.filter(match => !match.completed);
-        
+
         upcomingMatches.forEach(match => {
             const matchElement = document.querySelector(`[data-match-id="${match.id}"]`);
             if (matchElement) {
@@ -564,16 +601,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update countdown for a specific match
     function updateCountdown(match, element) {
         if (!element) return;
-        
+
         const matchDateTime = new Date(`${match.date} ${match.time}`);
         const now = new Date();
         const diff = matchDateTime - now;
-        
+
         if (diff > 0) {
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            
+
             element.textContent = `${days}d ${hours}h ${minutes}m`;
         } else {
             element.textContent = 'LIVE';
@@ -584,19 +621,19 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateLiveMatches() {
         const liveMatches = matches.filter(match => match.status === 'live');
         const liveMatchContainer = document.querySelector('.matches-container');
-        
+
         if (liveMatchContainer) {
             liveMatchContainer.innerHTML = '';
-            
+
             if (liveMatches.length === 0) {
                 liveMatchContainer.innerHTML = '<p class="no-results">No live matches currently. Check back soon!</p>';
                 return;
             }
-            
+
             liveMatches.forEach(match => {
                 const matchCard = document.createElement('div');
                 matchCard.classList.add('match-card', 'live-match');
-                
+
                 matchCard.innerHTML = `
                     <div class="match-header">
                         <span class="match-status live">TODAY</span>
@@ -622,21 +659,262 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 `;
-                
+
                 liveMatchContainer.appendChild(matchCard);
             });
         }
     }
+
+    // Add animation when elements come into view
+    function initIntersectionObserver() {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements to animate when they come into view
+        document.querySelectorAll('.match-card, .team-card, .stat').forEach(el => {
+            observer.observe(el);
+        });
+    }
+
+    // ========================
+    // Image Gallery Functions
+    // ========================
+    
+    // Function to show image grid for a specific match
+    function showMatchImageGrid(matchId, button) {
+        console.log('showMatchImageGrid called for matchId:', matchId);
+
+        // Find the match by ID
+        const match = matches.find(m => m.id === matchId);
+        if (!match) {
+            console.log('Match not found for ID:', matchId);
+            return;
+        }
+
+        const matchCard = button.closest('.match-card');
+        if (!matchCard) {
+            console.log('Match card not found for button');
+            return;
+        }
+
+        // Create or update the image grid container right after the button
+        let gridContainer = document.getElementById(`match-image-grid-${matchId}`);
+
+        if (!gridContainer) {
+            // Create the grid container
+            gridContainer = document.createElement('div');
+            gridContainer.id = `match-image-grid-${matchId}`;
+            gridContainer.className = 'match-image-grid';
+            gridContainer.style.display = 'none'; // Initially hidden
+
+            // Insert after the match card element
+            matchCard.parentNode.insertBefore(gridContainer, matchCard.nextSibling);
+        }
+
+        // Load images into the grid container
+        if (gridContainer) {
+            // Clear previous images only if it's empty
+            if (!gridContainer.hasChildNodes()) {
+                gridContainer.innerHTML = '<p class="loading-message">Loading images...</p>';
+
+                const imagePrefix = `src/img/id ${matchId} -`; // Corrected path
+
+                let imagesLoaded = 0; // Counter for successfully loaded images
+                const loadedImages = []; // Store loaded images to append all at once later
+
+                // Check for multiple images (a, b, c, etc.)
+                const possibleSuffixes = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
+
+                // Try to load images with different suffixes
+                possibleSuffixes.forEach(suffix => {
+                    const imagePath = `${imagePrefix}${suffix}.jpg`;
+
+                    // Create image element and try to load
+                    const img = new Image(); // Using Image constructor for better error handling
+                    img.src = imagePath;
+
+                    img.onload = function() {
+                        const thumbContainer = document.createElement('div');
+                        thumbContainer.className = 'image-thumb-container';
+                        const thumbImg = document.createElement('img');
+                        thumbImg.src = imagePath;
+                        thumbImg.alt = `Match ${matchId} Image ${suffix}`;
+                        thumbImg.title = `Match ${matchId} Image ${suffix}`;
+                        thumbImg.className = 'image-thumbnail';
+
+                        thumbImg.addEventListener('click', function() {
+                            showImagePreview(imagePath, `Match ${matchId} - Image ${suffix}`);
+                        });
+
+                        thumbContainer.appendChild(thumbImg);
+                        loadedImages.push(thumbContainer);
+                        updateGridContainer();
+                        imagesLoaded++;
+                        console.log(`Successfully loaded image: ${imagePath}`);
+                    };
+
+                    img.onerror = function() {
+                        console.log(`Failed to load image: ${imagePath}`);
+                        updateGridContainer();
+                    };
+                });
+
+                function updateGridContainer() {
+                    // A short delay to allow multiple images to process
+                    setTimeout(() => {
+                        if (loadedImages.length > 0) {
+                            gridContainer.innerHTML = '';
+                            loadedImages.forEach(imgContainer => {
+                                gridContainer.appendChild(imgContainer);
+                            });
+                        } else {
+                            gridContainer.innerHTML = '<p class="no-images-message">No result images available for this match.</p>';
+                        }
+                    }, 200);
+                }
+            }
+
+            // Show the grid container
+            gridContainer.style.display = 'block';
+            const allButtons = document.querySelectorAll(`.view-result-btn[data-match-id="${matchId}"]`);
+            allButtons.forEach(btn => {
+                btn.textContent = 'Hide Result';
+                btn.setAttribute('data-expanded', 'true');
+            });
+        }
+    }
+
+    // Function to hide the image grid
+    function hideMatchImageGrid(matchId) {
+        const gridContainer = document.getElementById(`match-image-grid-${matchId}`);
+        if (gridContainer) {
+            gridContainer.style.display = 'none';
+        }
+
+        // Update all buttons for this match
+        const allButtons = document.querySelectorAll(`.view-result-btn[data-match-id="${matchId}"]`);
+        allButtons.forEach(button => {
+            button.textContent = 'View Result';
+            button.setAttribute('data-expanded', 'false');
+        });
+    }
+
+    // Function to toggle the image grid
+    function toggleMatchImageGrid(matchId, button) {
+        const gridContainer = document.getElementById(`match-image-grid-${matchId}`);
+        if (gridContainer && gridContainer.style.display !== 'none') {
+            hideMatchImageGrid(matchId);
+        } else {
+            showMatchImageGrid(matchId, button);
+        }
+    }
+
+    // Function to show image preview in a large format
+    function showImagePreview(imageSrc, imageTitle) {
+        // Remove any existing preview
+        const existingPreview = document.querySelector('.image-preview-overlay');
+        if (existingPreview) {
+            existingPreview.remove();
+        }
+
+        // Create preview overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'image-preview-overlay';
+
+        // Create preview content
+        const previewContent = document.createElement('div');
+        previewContent.className = 'image-preview-content';
+
+        // Create large image
+        const largeImg = document.createElement('img');
+        largeImg.src = imageSrc;
+        largeImg.alt = imageTitle;
+        largeImg.className = 'large-preview-image';
+
+        // Create title
+        const title = document.createElement('h3');
+        title.textContent = imageTitle;
+        title.className = 'preview-title';
+
+        // Create close button
+        const closeBtn = document.createElement('span');
+        closeBtn.className = 'preview-close';
+        closeBtn.innerHTML = '&times;';
+        closeBtn.title = 'Close';
+
+        // Add elements to preview content
+        previewContent.appendChild(closeBtn);
+        previewContent.appendChild(title);
+        previewContent.appendChild(largeImg);
+        overlay.appendChild(previewContent);
+
+        // Add to document
+        document.body.appendChild(overlay);
+
+        // Add event listeners
+        closeBtn.addEventListener('click', function() {
+            overlay.remove();
+        });
+
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                overlay.remove();
+            }
+        });
+    }
+
+    // Add event listeners to view result buttons
+    function addViewResultButtonListeners() {
+        console.log('Initializing button listeners...');
+        // Use event delegation to handle dynamically added buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('view-result-btn')) {
+                console.log('View Result button clicked');
+                const matchId = parseInt(e.target.getAttribute('data-match-id'));
+                console.log('Match ID from button:', matchId);
+                if (matchId) {
+                    toggleMatchImageGrid(matchId, e.target);
+                }
+            }
+        });
+    }
+
+    // ========================
+    // Initialization
+    // ========================
     
     // Initialize all components
-    renderSchedule();
-    renderResults();
-    renderLeaderboard();
-    renderTeams();
-    updateLiveMatches(); // Add this to update live matches display
-    createStars();
-    initParticles();
-    
+    function initApp() {
+        initNavigation();
+        initScrollSpy();
+        initSmoothScrolling();
+        initTabs();
+        renderSchedule();
+        renderResults();
+        renderLeaderboard();
+        renderTeams();
+        updateLiveMatches();
+        createStars();
+        initParticles();
+        addViewResultButtonListeners();
+        initIntersectionObserver();
+    }
+
+    // Initialize the app after DOM is loaded
+    initApp();
+
     // Update live match timer every second
     setInterval(() => {
         // This is just for visual effect - in a real app, this would come from a server
@@ -646,35 +924,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const timeString = now.toLocaleTimeString();
             timer.textContent = timeString;
         });
-        
+
         // Also update live matches display periodically if needed
         const liveMatches = matches.filter(match => match.status === 'live');
         if (liveMatches.length > 0) {
             updateLiveMatches();
         }
     }, 1000);
-    
-    // Add animation when elements come into view
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1
-    };
-    
-    const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animated');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-    
-    // Observe elements to animate when they come into view
-    document.querySelectorAll('.match-card, .team-card, .stat').forEach(el => {
-        observer.observe(el);
-    });
-    
+
     // Update results section to show completed matches
     setTimeout(() => {
         const resultsContainer = document.querySelector('.results-grid');
@@ -683,14 +940,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const completedMatches = matches
                 .filter(match => match.completed)
                 .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
-            
+
             if (completedMatches.length > 0) {
                 resultsContainer.innerHTML = '';
-                
+
                 completedMatches.forEach(match => {
                     const resultCard = document.createElement('div');
                     resultCard.classList.add('match-card');
-                    
+
                     resultCard.innerHTML = `
                         <div class="match-header">
                             <span class="match-status">COMPLETED</span>
@@ -715,12 +972,15 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                             </div>
                         </div>
+                        <div class="match-result-actions">
+                            <button class="view-result-btn" data-match-id="${match.id}">View Result</button>
+                        </div>
                         <div class="match-details">
                             <p><i class="fas fa-trophy"></i> Winner: ${match.winner || 'Draw'}</p>
                             <p><i class="fas fa-calendar"></i> ${match.date} at ${match.time}</p>
                         </div>
                     `;
-                    
+
                     resultsContainer.appendChild(resultCard);
                 });
             } else {
@@ -728,24 +988,24 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }, 100); // Small delay to ensure DOM is ready
-    
+
     // Also ensure live/pending matches are updated after DOM changes
     setTimeout(() => {
         const liveMatchContainer = document.querySelector('.matches-container');
         if (liveMatchContainer) {
             const liveMatches = matches.filter(match => match.status === 'live' || match.status === 'pending');
-            
+
             liveMatchContainer.innerHTML = '';
-            
+
             if (liveMatches.length === 0) {
-                liveMatchContainer.innerHTML = '<p class=\"no-results\">No live matches currently. Check back soon!</p>';
+                liveMatchContainer.innerHTML = '<p class="no-results">No live matches currently. Check back soon!</p>';
                 return;
             }
-            
+
             liveMatches.forEach(match => {
                 const matchCard = document.createElement('div');
                 matchCard.classList.add('match-card', match.status === 'live' ? 'live-match' : 'pending-match');
-                
+
                 matchCard.innerHTML = `
                     <div class="match-header">
                         <span class="match-status ${match.status}">${match.status.toUpperCase()}</span>
@@ -770,8 +1030,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                     </div>
+                    <div class="match-result-actions">
+                        <button class="view-result-btn" data-match-id="${match.id}">View Result</button>
+                    </div>
                 `;
-                
+
                 liveMatchContainer.appendChild(matchCard);
             });
         }

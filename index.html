@@ -23,186 +23,185 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='50%' x='50%' text-anchor='middle' dominant-baseline='middle' font-size='40' fill='%2300ffff'%3EKG%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='50%' x='50%' text-anchor='middle' dominant-baseline='middle' font-size='40' fill='%2300ffff'%3EKG%3C/text%3E%3C/svg%3E\" type="image/svg+xml">
 </head>
 <body>
     <!-- Background Elements -->
-    <div id="stars"></div>
-    <div id="particles-js"></div>
+    <div id="stars" aria-hidden="true"></div>
+    <div id="particles-js" aria-hidden="true"></div>
     
     <!-- Main Content -->
     <div class="wrapper">
         <!-- Navigation -->
-        <nav class="navbar">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
             <div class="nav-container">
                 <div class="logo">
-                    <h1><i class="fas fa-gamepad"></i> <span>KG CORPORATE/PROPERTY MLBB</span></h1>
+                    <h1><i class="fas fa-gamepad" aria-hidden="true" title="Gamepad icon"></i> <span>KG CORPORATE/PROPERTY MLBB</span></h1>
                 </div>
-                <div class="nav-menu" id="nav-menu">
-                    <a href="#live" class="nav-link active">Today Matches</a>
-                    <a href="#schedule" class="nav-link">Schedule</a>
-                    <a href="#results" class="nav-link">Results</a>
-                    <a href="#leaderboard" class="nav-link">Leaderboard</a>
-                    <a href="#teams" class="nav-link">Teams</a>
+                <div class="nav-menu" id="nav-menu" role="menubar">
+                    <a href="#live" class="nav-link active" role="menuitem">Today Matches</a>
+                    <a href="#schedule" class="nav-link" role="menuitem">Schedule</a>
+                    <a href="#results" class="nav-link" role="menuitem">Results</a>
+                    <a href="#leaderboard" class="nav-link" role="menuitem">Leaderboard</a>
+                    <a href="#teams" class="nav-link" role="menuitem">Teams</a>
                 </div>
-                <div class="hamburger" id="hamburger">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
+                <div class="hamburger" id="hamburger" role="button" aria-label="Toggle navigation menu">
+                    <span class="bar" aria-hidden="true"></span>
+                    <span class="bar" aria-hidden="true"></span>
+                    <span class="bar" aria-hidden="true"></span>
                 </div>
             </div>
         </nav>
 
-
-
         <!-- Live Matches Section -->
-        <section id="live" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <h2><i class="fas fa-bolt"></i> TODAY MATCHES</h2>
-                    <div class="live-indicator">
-                        <span class="live-dot"></span> TODAY
-                    </div>
-                </div>
-                <div class="matches-container">
-                    <div class="match-card live-match">
-                        <div class="match-header">
-                            <span class="match-status live">TODAY</span>
-                            <span class="match-timer">01:23:45</span>
+        <main>
+            <section id="live" class="section">
+                <div class="container">
+                    <header class="section-header">
+                        <h2><i class="fas fa-bolt" aria-hidden="true" title="Lightning icon"></i> TODAY MATCHES</h2>
+                        <div class="live-indicator">
+                            <span class="live-dot" aria-hidden="true"></span> TODAY
                         </div>
-                        <div class="match-teams">
-                            <div class="team team-left">
-                                <div class="team-info">
-                                    <h3>ENG</h3>
+                    </header>
+                    <div class="matches-container">
+                        <div class="match-card live-match">
+                            <div class="match-header">
+                                <span class="match-status live">TODAY</span>
+                                <span class="match-timer">01:23:45</span>
+                            </div>
+                            <div class="match-teams">
+                                <div class="team team-left">
+                                    <div class="team-info">
+                                        <h3>ENG</h3>
+                                    </div>
+                                    <div class="team-score">
+                                        <span class="score">3</span>
+                                    </div>
                                 </div>
-                                <div class="team-score">
-                                    <span class="score">3</span>
+                                <div class="vs">VS</div>
+                                <div class="team team-right">
+                                    <div class="team-score">
+                                        <span class="score">1</span>
+                                    </div>
+                                    <div class="team-info">
+                                        <h3>AUDIT</h3>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="vs">VS</div>
-                            <div class="team team-right">
-                                <div class="team-score">
-                                    <span class="score">1</span>
-                                </div>
-                                <div class="team-info">
-                                    <h3>AUDIT</h3>
-                                </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Schedule Section -->
+            <section id="schedule" class="section">
+                <div class="container">
+                    <header class="section-header">
+                        <h2><i class="fas fa-calendar-alt" aria-hidden="true" title="Calendar icon"></i> MATCH SCHEDULE</h2>
+                        <div class="controls">
+                            <button class="tab-btn active" data-tab="upcoming">UPCOMING</button>
+                            <button class="tab-btn" data-tab="completed">COMPLETED</button>
+                        </div>
+                    </header>
+                    <div class="schedule-tabs">
+                        <div class="tab-content active" id="upcoming-tab">
+                            <div class="schedule-grid">
+                                <!-- Upcoming matches will be dynamically inserted here -->
+                            </div>
+                        </div>
+                        <div class="tab-content" id="completed-tab">
+                            <div class="schedule-grid">
+                                <!-- Completed matches will be dynamically inserted here -->
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Schedule Section -->
-        <section id="schedule" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <h2><i class="fas fa-calendar-alt"></i> MATCH SCHEDULE</h2>
-                    <div class="controls">
-                        <button class="tab-btn active" data-tab="upcoming">UPCOMING</button>
-                        <button class="tab-btn" data-tab="completed">COMPLETED</button>
+            <!-- Results Section -->
+            <section id="results" class="section">
+                <div class="container">
+                    <header class="section-header">
+                        <h2><i class="fas fa-trophy" aria-hidden="true" title="Trophy icon"></i> RECENT RESULTS</h2>
+                    </header>
+                    <div class="results-grid">
+                        <!-- Recent results will be dynamically inserted here -->
                     </div>
                 </div>
-                <div class="schedule-tabs">
-                    <div class="tab-content active" id="upcoming-tab">
-                        <div class="schedule-grid">
-                            <!-- Upcoming matches will be dynamically inserted here -->
-                        </div>
-                    </div>
-                    <div class="tab-content" id="completed-tab">
-                        <div class="schedule-grid">
-                            <!-- Completed matches will be dynamically inserted here -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Results Section -->
-        <section id="results" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <h2><i class="fas fa-trophy"></i> RECENT RESULTS</h2>
-                </div>
-                <div class="results-grid">
-                    <!-- Recent results will be dynamically inserted here -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Leaderboard Section -->
-        <section id="leaderboard" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <h2><i class="fas fa-ranking-star"></i> LEADERBOARD</h2>
-                </div>
-                <div class="leaderboard-container">
-                    <table class="leaderboard-table">
-                        <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Team</th>
-                                <th>P</th>
-                                <th>W</th>
-                                <th>D</th>
-                                <th>L</th>
-                                <th>PTS</th>
-                                <th>Form</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Leaderboard data will be dynamically inserted here -->
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Notes Section -->
-                <div class="notes-section">
-                    <h3>Tournament Rules</h3>
-                    <ul>
-                        <li>Best of 3 (BO3) format will be used for all matches: A team needs to win 2 out of 3 matches to win the series
-                            <ul>- Example scenarios BO3: 
-                                <ul class="sub-list">
-                                    <li>Team A wins first 2 matches → Series ends 2-0</li>
-                                    <li>Team A wins first match, Team B wins second match, Team A wins third match → Series ends 2-1</li>
+            <!-- Leaderboard Section -->
+            <section id="leaderboard" class="section">
+                <div class="container">
+                    <header class="section-header">
+                        <h2><i class="fas fa-ranking-star" aria-hidden="true" title="Ranking star icon"></i> LEADERBOARD</h2>
+                    </header>
+                    <div class="leaderboard-container">
+                        <table class="leaderboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Team</th>
+                                    <th>P</th>
+                                    <th>W</th>
+                                    <th>D</th>
+                                    <th>L</th>
+                                    <th>PTS</th>
+                                    <th>Form</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Leaderboard data will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Notes Section -->
+                    <div class="notes-section">
+                        <h3>Tournament Rules</h3>
+                        <ul>
+                            <li>Best of 3 (BO3) format will be used for all matches: A team needs to win 2 out of 3 matches to win the series
+                                <ul>- Example scenarios BO3: 
+                                    <ul class="sub-list">
+                                        <li>Team A wins first 2 matches → Series ends 2-0</li>
+                                        <li>Team A wins first match, Team B wins second match, Team A wins third match → Series ends 2-1</li>
+                                    </ul>
                                 </ul>
-                            </ul>
-                        </li>
-                        
-                        <li>Winning team receives 3 points, losing team receives 0 points</li>
-                        <li>15-minute grace period is allowed after the scheduled time; teams arriving after this period will forfeit the match (WO)</li>
-                        <li>Top 2 teams (Champion and Runner-up) will represent KG CORPORATE/PROPERTY in the next level</li>
-                    </ul>
+                            </li>
+                            
+                            <li>Winning team receives 3 points, losing team receives 0 points</li>
+                            <li>15-minute grace period is allowed after the scheduled time; teams arriving after this period will forfeit the match (WO)</li>
+                            <li>Top 2 teams (Champion and Runner-up) will represent KG CORPORATE/PROPERTY in the next level</li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Teams Section -->
-        <section id="teams" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <h2><i class="fas fa-users"></i> TEAMS</h2>
-                </div>
-                <div class="teams-grid">
-                    <!-- Teams will be dynamically inserted here -->
-                </div>
-                <div class="team-detail-modal">
-                    <div class="modal-content">
-                        <span class="close-modal">&times;</span>
-                        <div class="team-detail-content">
-                            <!-- Team details will be shown here -->
+            <!-- Teams Section -->
+            <section id="teams" class="section">
+                <div class="container">
+                    <header class="section-header">
+                        <h2><i class="fas fa-users" aria-hidden="true" title="Users icon"></i> TEAMS</h2>
+                    </header>
+                    <div class="teams-grid">
+                        <!-- Teams will be dynamically inserted here -->
+                    </div>
+                    <div class="team-detail-modal">
+                        <div class="modal-content">
+                            <span class="close-modal" aria-label="Close modal">&times;</span>
+                            <div class="team-detail-content">
+                                <!-- Team details will be shown here -->
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-
+            </section>
+        </main>
 
         <!-- Copyright -->
-        <div class="copyright">
+        <footer class="copyright">
             <p>Rusydani on Cloud (Roc) - KG - 2025</p>
-        </div>
+        </footer>
     </div>
 
     <script src="script.js"></script>
