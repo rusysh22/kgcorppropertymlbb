@@ -86,10 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Sample data - matches with live status for match 1 and 2, and upcoming matches scheduled from Oct 21-24, 2025
     const matches = [
-        { id: 1, team1: 'ENG', team2: 'CFP', status: 'live', date: '2025-01-15', time: '17:00', score: { team1: 0, team2: 0 }, winner: null, completed: false },
-        { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'live', date: '2025-01-16', time: '17:00', score: { team1: 0, team2: 0 }, winner: null, completed: false },
-        { id: 3, team1: 'AUDIT', team2: 'ENG', status: 'upcoming', date: '2025-10-21', time: '17:00', score: null, winner: null, completed: false },
-        { id: 4, team1: 'CFP', team2: 'CITIS', status: 'upcoming', date: '2025-10-21', time: '17:00', score: null, winner: null, completed: false },
+        { id: 1, team1: 'ENG', team2: 'AUDIT', status: 'live', date: '2025-01-15', time: '17:00', score: { team1: 0, team2: 0 }, winner: null, completed: false },
+        { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'live', date: '2025-01-16', time: '17:30', score: { team1: 0, team2: 0 }, winner: null, completed: false },
+        { id: 3, team1: 'CFP', team2: 'ENG', status: 'upcoming', date: '2025-10-21', time: '17:00', score: null, winner: null, completed: false },
+        { id: 4, team1: 'CFP', team2: 'CITIS', status: 'upcoming', date: '2025-10-21', time: '18:00', score: null, winner: null, completed: false },
         { id: 5, team1: 'ACC/TAX/FSD', team2: 'AUDIT', status: 'upcoming', date: '2025-10-22', time: '17:00', score: null, winner: null, completed: false },
         { id: 6, team1: 'ENG', team2: 'CITIS', status: 'upcoming', date: '2025-10-22', time: '17:00', score: null, winner: null, completed: false },
         { id: 7, team1: 'CFP', team2: 'ACC/TAX/FSD', status: 'upcoming', date: '2025-10-23', time: '17:00', score: null, winner: null, completed: false },
@@ -343,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <h3>Contact: ${team.contact.name}</h3>
                             <p>
                                 <a href="${waLink}" class="wa-button" target="_blank">
-                                    <i class="fab fa-whatsapp"></i> Chat via WhatsApp
+                                    <i class="fab fa-whatsapp"></i> Chat on WhatsApp
                                 </a>
                             </p>
                         </div>
