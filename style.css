@@ -391,6 +391,48 @@ body {
 .team {
     display: flex;
     align-items: center;
+    gap: 5px;
+}
+
+.team-left {
+    text-align: left;
+    justify-content: flex-start;
+}
+
+.team-right {
+    text-align: right;
+    justify-content: flex-end;
+}
+
+.team-info h3 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent-color);
+    margin-bottom: 5px;
+}
+
+.team-info p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.team-score {
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: 'Orbitron', sans-serif;
+    color: var(--text-color);
+}
+
+.vs {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    color: var(--warning-color);
+    margin: 0 20px;
+    text-shadow: 0 0 10px var(--warning-color);
+}
+
+.team {
+    display: flex;
+    align-items: center;
     gap: 15px;
     flex: 1;
 }
@@ -429,7 +471,7 @@ body {
     font-family: 'Orbitron', sans-serif;
     font-size: 1.5rem;
     color: var(--warning-color);
-    margin: 0 20px;
+    margin: 0 10px;
     text-shadow: 0 0 10px var(--warning-color);
 }
 
