@@ -86,8 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Sample data - matches with live status for match 1 and 2, and upcoming matches scheduled from Oct 21-24, 2025
     const matches = [
-        { id: 1, team1: 'ENG', team2: 'AUDIT', status: 'live', date: '2025-01-20', time: '17:00', score: { team1: 0, team2: 2 }, winner: null, completed: false },
-        { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'live', date: '2025-01-20', time: '17:30', score: { team1: 0, team2: 0 }, winner: null, completed: false },
+        { id: 1, team1: 'ENG', team2: 'AUDIT', status: 'completed', date: '2025-01-20', time: '17:00', score: { team1: 0, team2: 2 }, winner: 'AUDIT', completed: true },
+        { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'pending', date: '2025-01-20', time: '17:30', score: null, winner: null, completed: false },
         { id: 3, team1: 'CFP', team2: 'ENG', status: 'upcoming', date: '2025-10-21', time: '17:00', score: null, winner: null, completed: false },
         { id: 4, team1: 'CFP', team2: 'CITIS', status: 'upcoming', date: '2025-10-21', time: '18:00', score: null, winner: null, completed: false },
         { id: 5, team1: 'ACC/TAX/FSD', team2: 'AUDIT', status: 'upcoming', date: '2025-10-22', time: '17:00', score: null, winner: null, completed: false },
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function calculateStandings(matches) {
         const teams = {};
         
-        // Initialize teams with zero values since no matches have been completed
+        // Initialize teams with zero values
         Object.keys(teamsData).forEach(teamName => {
             teams[teamName] = {
                 name: teamName,
@@ -139,12 +139,55 @@ document.addEventListener('DOMContentLoaded', () => {
                 draws: 0,
                 played: 0,
                 points: 0,
-                form: [] // Last 5 matches (empty initially)
+                form: [] // Last 5 matches
             };
         });
         
-        // Since no matches are completed, we return teams with zero values
-        // Convert to array and sort by points (all zero, so order is arbitrary)
+        // Process completed matches to update standings
+        matches.forEach(match => {
+            if (match.completed && match.score !== null) {
+                const { team1, team2, score, winner } = match;
+                
+                if (teams[team1] && teams[team2]) {
+                    // Update played matches
+                    teams[team1].played++;
+                    teams[team2].played++;
+                    
+                    // Update form (add result to form array)
+                    if (winner === team1) {
+                        teams[team1].form.push('W');
+                        teams[team2].form.push('L');
+                        teams[team1].wins++;
+                        teams[team2].losses++;
+                        teams[team1].points += 3; // 3 points for win
+                    } else if (winner === team2) {
+                        teams[team2].form.push('W');
+                        teams[team1].form.push('L');
+                        teams[team2].wins++;
+                        teams[team1].losses++;
+                        teams[team2].points += 3; // 3 points for win
+                    } else if (match.status === 'completed' && winner === null) {
+                        // Draw case
+                        teams[team1].form.push('D');
+                        teams[team2].form.push('D');
+                        teams[team1].draws++;
+                        teams[team2].draws++;
+                        teams[team1].points += 1;
+                        teams[team2].points += 1;
+                    }
+                    
+                    // Keep only last 5 matches in form
+                    if (teams[team1].form.length > 5) {
+                        teams[team1].form.shift();
+                    }
+                    if (teams[team2].form.length > 5) {
+                        teams[team2].form.shift();
+                    }
+                }
+            }
+        });
+        
+        // Convert to array and sort by points, then by wins
         return Object.values(teams).sort((a, b) => 
             b.points - a.points || 
             b.wins - a.wins
@@ -273,6 +316,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Calculate total matches played
                 const played = team.wins + team.losses + team.draws;
                 
+                // Create form indicators HTML using colored circles
+                let formIndicators = '';
+                if (team.form.length > 0) {
+                    formIndicators = team.form.map(result => {
+                        if (result === 'W') {
+                            return '<span class="form-win" title="Win"></span>';
+                        } else if (result === 'L') {
+                            return '<span class="form-loss" title="Loss"></span>';
+                        } else if (result === 'D') {
+                            return '<span class="form-draw" title="Draw"></span>';
+                        }
+                        return '';
+                    }).join('');
+                } else {
+                    formIndicators = 'N/A';
+                }
+
                 row.innerHTML = `
                     <td>${index + 1}</td>
                     <td>${team.name}</td>
@@ -281,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${team.draws}</td>
                     <td>${team.losses}</td>
                     <td>${team.points}</td>
-                    <td>${formString}</td>
+                    <td>${formIndicators}</td>
                 `;
                 leaderboardBody.appendChild(row);
             });
@@ -614,4 +674,106 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.match-card, .team-card, .stat').forEach(el => {
         observer.observe(el);
     });
+    
+    // Update results section to show completed matches
+    setTimeout(() => {
+        const resultsContainer = document.querySelector('.results-grid');
+        if (resultsContainer) {
+            // Get completed matches from the global matches array
+            const completedMatches = matches
+                .filter(match => match.completed)
+                .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
+            
+            if (completedMatches.length > 0) {
+                resultsContainer.innerHTML = '';
+                
+                completedMatches.forEach(match => {
+                    const resultCard = document.createElement('div');
+                    resultCard.classList.add('match-card');
+                    
+                    resultCard.innerHTML = `
+                        <div class="match-header">
+                            <span class="match-status">COMPLETED</span>
+                            <div class="match-time">${match.date}</div>
+                        </div>
+                        <div class="match-teams">
+                            <div class="team team-left ${match.winner === match.team1 ? 'match-winner' : ''}">
+                                <div class="team-info">
+                                    <h3>${match.team1}</h3>
+                                </div>
+                                <div class="team-score">
+                                    <span class="score">${match.score.team1}</span>
+                                </div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team team-right ${match.winner === match.team2 ? 'match-winner' : ''}">
+                                <div class="team-score">
+                                    <span class="score">${match.score.team2}</span>
+                                </div>
+                                <div class="team-info">
+                                    <h3>${match.team2}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="match-details">
+                            <p><i class="fas fa-trophy"></i> Winner: ${match.winner || 'Draw'}</p>
+                            <p><i class="fas fa-calendar"></i> ${match.date} at ${match.time}</p>
+                        </div>
+                    `;
+                    
+                    resultsContainer.appendChild(resultCard);
+                });
+            } else {
+                resultsContainer.innerHTML = '<p class="no-results">No results yet. Check back soon!</p>';
+            }
+        }
+    }, 100); // Small delay to ensure DOM is ready
+    
+    // Also ensure live/pending matches are updated after DOM changes
+    setTimeout(() => {
+        const liveMatchContainer = document.querySelector('.matches-container');
+        if (liveMatchContainer) {
+            const liveMatches = matches.filter(match => match.status === 'live' || match.status === 'pending');
+            
+            liveMatchContainer.innerHTML = '';
+            
+            if (liveMatches.length === 0) {
+                liveMatchContainer.innerHTML = '<p class=\"no-results\">No live matches currently. Check back soon!</p>';
+                return;
+            }
+            
+            liveMatches.forEach(match => {
+                const matchCard = document.createElement('div');
+                matchCard.classList.add('match-card', match.status === 'live' ? 'live-match' : 'pending-match');
+                
+                matchCard.innerHTML = `
+                    <div class="match-header">
+                        <span class="match-status ${match.status}">${match.status.toUpperCase()}</span>
+                        <span class="match-timer">${match.time}</span>
+                    </div>
+                    <div class="match-teams">
+                        <div class="team team-left">
+                            <div class="team-info">
+                                <h3>${match.team1}</h3>
+                            </div>
+                            <div class="team-score">
+                                <span class="score">${match.score && match.score.team1 !== undefined ? match.score.team1 : ''}</span>
+                            </div>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team team-right">
+                            <div class="team-score">
+                                <span class="score">${match.score && match.score.team2 !== undefined ? match.score.team2 : ''}</span>
+                            </div>
+                            <div class="team-info">
+                                <h3>${match.team2}</h3>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                liveMatchContainer.appendChild(matchCard);
+            });
+        }
+    }, 200); // Slightly longer delay to ensure results are processed first
 });

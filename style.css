@@ -354,6 +354,14 @@ body {
     background: linear-gradient(90deg, var(--danger-color), #ff6b6b);
 }
 
+.pending-match {
+    border: 2px solid var(--warning-color);
+}
+
+.pending-match::before {
+    background: linear-gradient(90deg, var(--warning-color), #ffcc00);
+}
+
 .match-header {
     display: flex;
     justify-content: space-between;
@@ -373,6 +381,12 @@ body {
     background: rgba(255, 0, 0, 0.2);
     color: var(--danger-color);
     border: 1px solid var(--danger-color);
+}
+
+.match-status.pending {
+    background: rgba(255, 255, 0, 0.2);
+    color: var(--warning-color);
+    border: 1px solid var(--warning-color);
 }
 
 .match-timer {
@@ -473,6 +487,37 @@ body {
     color: var(--warning-color);
     margin: 0 10px;
     text-shadow: 0 0 10px var(--warning-color);
+}
+
+/* Leaderboard form indicators */
+.form-win {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: var(--success-color);
+    border-radius: 50%;
+    margin: 0 2px;
+    box-shadow: 0 0 5px var(--success-color);
+}
+
+.form-loss {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: var(--danger-color);
+    border-radius: 50%;
+    margin: 0 2px;
+    box-shadow: 0 0 5px var(--danger-color);
+}
+
+.form-draw {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: var(--warning-color);
+    border-radius: 50%;
+    margin: 0 2px;
+    box-shadow: 0 0 5px var(--warning-color);
 }
 
 /* Leaderboard */
