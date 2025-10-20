@@ -530,6 +530,9 @@ body {
     color: var(--text-secondary);
     position: relative;
     padding-left: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .team-card li::before {
@@ -539,6 +542,74 @@ body {
     left: 0;
     top: 50%;
     transform: translateY(-50%);
+}
+
+/* Animation for long player names in modal only */
+.modal-content li.long-name {
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-content li.long-name::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 15px;
+    height: 100%;
+    background: linear-gradient(to left, var(--secondary-color), transparent);
+    z-index: 1;
+}
+
+.modal-content li.long-name span {
+    display: inline-block;
+    animation: slideLeft 5s linear infinite;
+    padding-right: 10px;
+    background: transparent;
+}
+
+@keyframes slideLeft {
+    0% {
+        transform: translateX(50%);
+    }
+    100% {
+        transform: translateX(-25%);
+    }
+}
+
+/* For player grid in modal */
+.player-item {
+    background: rgba(26, 26, 26, 0.7);
+    border: 1px solid var(--accent-color);
+    border-radius: var(--border-radius);
+    padding: 10px;
+    text-align: center;
+    transition: var(--transition);
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+}
+
+.player-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 15px;
+    height: 100%;
+    background: linear-gradient(to left, rgba(26, 26, 26, 0.7), transparent);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.player-item span {
+    display: inline-block;
+    animation: slideLeft 6s linear infinite;
+    padding-right: 10px;
+}
+
+.player-grid li {
+    position: relative;
 }
 
 /* Modal */

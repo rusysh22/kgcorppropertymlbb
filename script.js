@@ -307,12 +307,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cleanPhone = team.contact.phone.replace(/[^0-9]/g, '');
                 const waLink = `https://wa.me/${cleanPhone}`;
                 
+                // Generate player list for team card (no animation)
+                const playerList = team.players.map(player => {
+                    return `<li title="${player}">${player}</li>`;
+                }).join('');
+                
                 teamCard.innerHTML = `
                     <h3>${teamName}</h3>
                     <p class="team-stats">${team.players.length} Players</p>
                     <p class="team-contact"><strong>Contact:</strong> <a href="${waLink}" target="_blank">${team.contact.name}</a> (${team.contact.phone})</p>
                     <ul>
-                        ${team.players.map(player => `<li>${player}</li>`).join('')}
+                        ${playerList}
                     </ul>
                 `;
                 
@@ -320,6 +325,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Format phone number for WhatsApp API (remove spaces, dashes, and add country code)
                     const cleanPhone = team.contact.phone.replace(/[^0-9]/g, '');
                     const waLink = `https://wa.me/${cleanPhone}`;
+                    
+                    // Generate player list with animation for long names in modal
+                    const playerModalList = team.players.map(player => {
+                        const isLongName = player.length > 15; // Consider names longer than 15 chars as long
+                        if (isLongName) {
+                            return `<li class="player-item long-name"><span>${player}</span></li>`;
+                        } else {
+                            return `<li class="player-item">${player}</li>`;
+                        }
+                    }).join('');
                     
                     modalContent.innerHTML = `
                         <h2>${teamName}</h2>
@@ -335,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="players-list">
                             <h3>Players List</h3>
                             <ul class="player-grid">
-                                ${team.players.map(player => `<li class="player-item">${player}</li>`).join('')}
+                                ${playerModalList}
                             </ul>
                         </div>
                     `;
