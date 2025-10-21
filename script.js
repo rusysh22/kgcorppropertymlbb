@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contact: { name: 'Niko', phone: '+62 812-1283-5637' }
         },
         'CFP': { 
-            players: ['Shubkhi', 'zemos', 'Wally', 'Cloe', 'Exodus', 'Fajar'],
+            players: ['Shubkhi', 'zemos', 'Wally', 'Cloe', 'Exodus', 'DougyMandagri'],
             color: '#ff00ff',
             contact: { name: 'Dani', phone: '+62 823-3156-5773' }
         },

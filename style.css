@@ -397,20 +397,18 @@ body {
 .team {
     display: flex;
     align-items: center;
-    gap: 10px; /* Reduced gap between team info and score */
+    gap: 15px; /* Standard gap between team info and score */
     flex: 1;
 }
 
 .team-left {
     text-align: left;
     justify-content: flex-start;
-    flex-direction: row;
 }
 
 .team-right {
     text-align: right;
     justify-content: flex-end;
-    flex-direction: row-reverse;
 }
 
 .team-info h3 {
