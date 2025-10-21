@@ -228,9 +228,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Render schedule
     function renderSchedule() {
-        // Get upcoming matches (not live or completed) and sort by date (earliest first)
+        // Get today's date in YYYY-MM-DD format
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+        
+        // Get upcoming matches (not live or completed and not for today) and sort by date (earliest first)
         const upcomingMatches = matches
-            .filter(match => match.status === 'upcoming')
+            .filter(match => match.status === 'upcoming' && match.date !== todayStr)
             .sort((a, b) => new Date(a.date) - new Date(b.date));
             
         // Get completed matches and sort by date (most recent first)
@@ -617,22 +621,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Update live matches display
+    // Update live matches display - Updated to show today's matches
     function updateLiveMatches() {
-        const liveMatches = matches.filter(match => match.status === 'live');
+        // Get today's date in YYYY-MM-DD format
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+        
+        // Filter matches for today's date (including both upcoming and live matches)
+        const todayMatches = matches.filter(match => match.date === todayStr);
+        
         const liveMatchContainer = document.querySelector('.matches-container');
 
         if (liveMatchContainer) {
             liveMatchContainer.innerHTML = '';
 
-            if (liveMatches.length === 0) {
-                liveMatchContainer.innerHTML = '<p class="no-results">No live matches currently. Check back soon!</p>';
+            if (todayMatches.length === 0) {
+                liveMatchContainer.innerHTML = '<p class="no-results">No matches scheduled for today. Check back soon!</p>';
                 return;
             }
 
-            liveMatches.forEach(match => {
+            todayMatches.forEach(match => {
                 const matchCard = document.createElement('div');
                 matchCard.classList.add('match-card', 'live-match');
+
+                // Set default scores if match doesn't have a score yet
+                const team1Score = match.score && match.score.team1 !== undefined ? match.score.team1 : '0';
+                const team2Score = match.score && match.score.team2 !== undefined ? match.score.team2 : '0';
 
                 matchCard.innerHTML = `
                     <div class="match-header">
@@ -645,13 +659,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <h3>${match.team1}</h3>
                             </div>
                             <div class="team-score">
-                                <span class="score">${match.score.team1}</span>
+                                <span class="score">${team1Score}</span>
                             </div>
                         </div>
                         <div class="vs">VS</div>
                         <div class="team team-right">
                             <div class="team-score">
-                                <span class="score">${match.score.team2}</span>
+                                <span class="score">${team2Score}</span>
                             </div>
                             <div class="team-info">
                                 <h3>${match.team2}</h3>
@@ -748,6 +762,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     img.onload = function() {
                         const thumbContainer = document.createElement('div');
                         thumbContainer.className = 'image-thumb-container';
+                        
+                        const label = document.createElement('div');
+                        label.className = 'image-label';
+                        label.textContent = `Match ${suffix.toUpperCase()}`;
+                        
                         const thumbImg = document.createElement('img');
                         thumbImg.src = imagePath;
                         thumbImg.alt = `Match ${matchId} Image ${suffix}`;
@@ -758,6 +777,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             showImagePreview(imagePath, `Match ${matchId} - Image ${suffix}`);
                         });
 
+                        thumbContainer.appendChild(label);
                         thumbContainer.appendChild(thumbImg);
                         loadedImages.push(thumbContainer);
                         updateGridContainer();
@@ -914,23 +934,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize the app after DOM is loaded
     initApp();
-
-    // Update live match timer every second
-    setInterval(() => {
-        // This is just for visual effect - in a real app, this would come from a server
-        const liveTimers = document.querySelectorAll('.match-timer');
-        liveTimers.forEach(timer => {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString();
-            timer.textContent = timeString;
-        });
-
-        // Also update live matches display periodically if needed
-        const liveMatches = matches.filter(match => match.status === 'live');
-        if (liveMatches.length > 0) {
-            updateLiveMatches();
+    
+    // Initialize local time display
+    function updateLocalTime() {
+        const now = new Date();
+        // Format time in 24-hour format with WIB timezone
+        const options = {
+            hour: '2-digit',
+            minute: '2-digit', 
+            second: '2-digit',
+            hour12: false, // Use 24-hour format
+            timeZone: 'Asia/Jakarta' // WIB timezone
+        };
+        const timeString = now.toLocaleTimeString('id-ID', options);
+        const timeElement = document.getElementById('timeText');
+        if (timeElement) {
+            timeElement.textContent = `${timeString} WIB`;
         }
-    }, 1000);
+    }
+    
+    // Update time immediately
+    updateLocalTime();
+    
+    // Update time every second
+    setInterval(updateLocalTime, 1000);
+
+
 
     // Update results section to show completed matches
     setTimeout(() => {
@@ -989,54 +1018,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 100); // Small delay to ensure DOM is ready
 
-    // Also ensure live/pending matches are updated after DOM changes
-    setTimeout(() => {
-        const liveMatchContainer = document.querySelector('.matches-container');
-        if (liveMatchContainer) {
-            const liveMatches = matches.filter(match => match.status === 'live' || match.status === 'pending');
 
-            liveMatchContainer.innerHTML = '';
-
-            if (liveMatches.length === 0) {
-                liveMatchContainer.innerHTML = '<p class="no-results">No live matches currently. Check back soon!</p>';
-                return;
-            }
-
-            liveMatches.forEach(match => {
-                const matchCard = document.createElement('div');
-                matchCard.classList.add('match-card', match.status === 'live' ? 'live-match' : 'pending-match');
-
-                matchCard.innerHTML = `
-                    <div class="match-header">
-                        <span class="match-status ${match.status}">${match.status.toUpperCase()}</span>
-                        <span class="match-timer">${match.time}</span>
-                    </div>
-                    <div class="match-teams">
-                        <div class="team team-left">
-                            <div class="team-info">
-                                <h3>${match.team1}</h3>
-                            </div>
-                            <div class="team-score">
-                                <span class="score">${match.score && match.score.team1 !== undefined ? match.score.team1 : ''}</span>
-                            </div>
-                        </div>
-                        <div class="vs">VS</div>
-                        <div class="team team-right">
-                            <div class="team-score">
-                                <span class="score">${match.score && match.score.team2 !== undefined ? match.score.team2 : ''}</span>
-                            </div>
-                            <div class="team-info">
-                                <h3>${match.team2}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="match-result-actions">
-                        <button class="view-result-btn" data-match-id="${match.id}">View Result</button>
-                    </div>
-                `;
-
-                liveMatchContainer.appendChild(matchCard);
-            });
-        }
-    }, 200); // Slightly longer delay to ensure results are processed first
 });
