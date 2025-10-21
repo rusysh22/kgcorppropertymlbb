@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const matches = [
         { id: 1, team1: 'ENG', team2: 'AUDIT', status: 'completed', date: '2025-01-20', time: '17:00', score: { team1: 0, team2: 2 }, winner: 'AUDIT', completed: true },
         { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'pending', date: '2025-01-20', time: '17:30', score: null, winner: null, completed: false },
-        { id: 3, team1: 'CFP', team2: 'ENG', status: 'upcoming', date: '2025-10-21', time: '21:00', score: null, winner: null, completed: false },
+        { id: 3, team1: 'CFP', team2: 'ENG', status: 'completed', date: '2025-10-21', time: '21:00', score: { team1: 2, team2: 0 }, winner: 'CFP', completed: true },
         { id: 4, team1: 'CFP', team2: 'CITIS', status: 'pending', date: '2025-10-21', time: '18:00', score: null, winner: null, completed: false },
         { id: 5, team1: 'ACC/TAX/FSD', team2: 'AUDIT', status: 'upcoming', date: '2025-10-22', time: '17:00', score: null, winner: null, completed: false },
         { id: 6, team1: 'ENG', team2: 'CITIS', status: 'upcoming', date: '2025-10-22', time: '17:00', score: null, winner: null, completed: false },
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contact: { name: 'Niko', phone: '+62 812-1283-5637' }
         },
         'CFP': { 
-            players: ['Shubkhi', 'zemos', 'Wally', 'Cloe', 'Exodus', 'DougyMandagri'],
+            players: ['Shubkhi', 'zemos', 'Wally', 'Cloe', 'Exodus', 'DougyMandagri (Fajar)'],
             color: '#ff00ff',
             contact: { name: 'Dani', phone: '+62 823-3156-5773' }
         },
