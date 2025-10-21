@@ -9,9 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sample data - matches with live status for match 1 and 2, and upcoming matches scheduled from Oct 21-24, 2025
     const matches = [
         { id: 1, team1: 'ENG', team2: 'AUDIT', status: 'completed', date: '2025-01-20', time: '17:00', score: { team1: 0, team2: 2 }, winner: 'AUDIT', completed: true },
-        { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'completed', date: '2025-01-20', time: '17:30', score: { team1: 0, team2: 0 }, winner: null, completed: true },
-        { id: 3, team1: 'CFP', team2: 'ENG', status: 'upcoming', date: '2025-10-21', time: '17:00', score: null, winner: null, completed: false },
-        { id: 4, team1: 'CFP', team2: 'CITIS', status: 'upcoming', date: '2025-10-21', time: '18:00', score: null, winner: null, completed: false },
+        { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'pending', date: '2025-01-20', time: '17:30', score: null, winner: null, completed: false },
+        { id: 3, team1: 'CFP', team2: 'ENG', status: 'upcoming', date: '2025-10-21', time: '21:00', score: null, winner: null, completed: false },
+        { id: 4, team1: 'CFP', team2: 'CITIS', status: 'pending', date: '2025-10-21', time: '18:00', score: null, winner: null, completed: false },
         { id: 5, team1: 'ACC/TAX/FSD', team2: 'AUDIT', status: 'upcoming', date: '2025-10-22', time: '17:00', score: null, winner: null, completed: false },
         { id: 6, team1: 'ENG', team2: 'CITIS', status: 'upcoming', date: '2025-10-22', time: '17:00', score: null, winner: null, completed: false },
         { id: 7, team1: 'CFP', team2: 'ACC/TAX/FSD', status: 'upcoming', date: '2025-10-23', time: '17:00', score: null, winner: null, completed: false },
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Process completed matches to update standings
         matches.forEach(match => {
-            if (match.completed && match.score !== null) {
+            if (match.completed && match.score !== null && match.status === 'completed') {
                 const { team1, team2, score, winner } = match;
                 
                 if (teams[team1] && teams[team2]) {
@@ -237,12 +237,18 @@ document.addEventListener('DOMContentLoaded', () => {
             .filter(match => match.status === 'upcoming' && match.date !== todayStr)
             .sort((a, b) => new Date(a.date) - new Date(b.date));
             
+        // Get pending matches
+        const pendingMatches = matches
+            .filter(match => match.status === 'pending')
+            .sort((a, b) => new Date(a.date) - new Date(b.date));
+            
         // Get completed matches and sort by date (most recent first)
         const completedMatches = matches
             .filter(match => match.completed)
             .sort((a, b) => new Date(b.date) - new Date(a.date));
 
         const upcomingContainer = document.querySelector('#upcoming-tab .schedule-grid');
+        const pendingContainer = document.querySelector('#pending-tab .schedule-grid');
         const completedContainer = document.querySelector('#completed-tab .schedule-grid');
 
         if (upcomingContainer) {
@@ -273,6 +279,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
                 upcomingContainer.appendChild(matchCard);
+            });
+        }
+
+        if (pendingContainer) {
+            pendingContainer.innerHTML = '';
+            pendingMatches.forEach(match => {
+                const matchCard = document.createElement('div');
+                matchCard.classList.add('match-card', 'pending-match');
+                matchCard.innerHTML = `
+                    <div class="match-header">
+                        <span class="match-status pending">PENDING</span>
+                        <div class="match-time">${match.date} ${match.time}</div>
+                    </div>
+                    <div class="match-teams">
+                        <div class="team team-left">
+                            <div class="team-info">
+                                <h3>${match.team1}</h3>
+                            </div>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team team-right">
+                            <div class="team-info">
+                                <h3>${match.team2}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="match-details">
+                        <p><i class="fas fa-calendar"></i> ${match.date} at ${match.time}</p>
+                    </div>
+                `;
+                pendingContainer.appendChild(matchCard);
             });
         }
 
@@ -323,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderResults() {
         // Get completed matches and sort them by date (most recent first)
         const completedMatches = matches
-            .filter(match => match.completed)
+            .filter(match => match.completed && match.status !== 'pending')
             .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
 
         const resultsContainer = document.querySelector('.results-grid');
@@ -628,7 +665,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const todayStr = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
         
         // Filter matches for today's date (including both upcoming and live matches)
-        const todayMatches = matches.filter(match => match.date === todayStr);
+        const todayMatches = matches.filter(match => match.date === todayStr && match.status !== 'pending');
         
         const liveMatchContainer = document.querySelector('.matches-container');
 
@@ -647,6 +684,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Set default scores if match doesn't have a score yet
                 const team1Score = match.score && match.score.team1 !== undefined ? match.score.team1 : '0';
                 const team2Score = match.score && match.score.team2 !== undefined ? match.score.team2 : '0';
+
+                matchCard.setAttribute('data-match-id', match.id);
 
                 matchCard.innerHTML = `
                     <div class="match-header">
@@ -676,8 +715,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 liveMatchContainer.appendChild(matchCard);
             });
+
+
         }
     }
+
+
 
     // Add animation when elements come into view
     function initIntersectionObserver() {
@@ -967,7 +1010,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (resultsContainer) {
             // Get completed matches from the global matches array
             const completedMatches = matches
-                .filter(match => match.completed)
+                .filter(match => match.completed && match.status !== 'pending')
                 .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
 
             if (completedMatches.length > 0) {
