@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'pending', date: '2025-01-20', time: '17:30', score: null, winner: null, completed: false },
         { id: 3, team1: 'CFP', team2: 'ENG', status: 'completed', date: '2025-10-21', time: '21:00', score: { team1: 2, team2: 0 }, winner: 'CFP', completed: true },
         { id: 4, team1: 'CFP', team2: 'CITIS', status: 'pending', date: '2025-10-21', time: '18:00', score: null, winner: null, completed: false },
-        { id: 5, team1: 'ACC/TAX/FSD', team2: 'AUDIT', status: 'upcoming', date: '2025-10-22', time: '17:00', score: null, winner: null, completed: false },
-        { id: 6, team1: 'ENG', team2: 'CITIS', status: 'upcoming', date: '2025-10-22', time: '17:00', score: null, winner: null, completed: false },
+        { id: 5, team1: 'ACC/TAX/FSD', team2: 'AUDIT', status: 'today', date: '2025-10-22', time: '17:00', score: { team1: 0, team2: 0 }, winner: null, completed: false },
+        { id: 6, team1: 'ENG', team2: 'CITIS', status: 'today', date: '2025-10-22', time: '19:00', score: { team1: 0, team2: 0 }, winner: null, completed: false },
         { id: 7, team1: 'CFP', team2: 'ACC/TAX/FSD', status: 'upcoming', date: '2025-10-23', time: '17:00', score: null, winner: null, completed: false },
         { id: 8, team1: 'AUDIT', team2: 'CITIS', status: 'upcoming', date: '2025-10-23', time: '17:00', score: null, winner: null, completed: false },
         { id: 9, team1: 'ENG', team2: 'ACC/TAX/FSD', status: 'upcoming', date: '2025-10-24', time: '17:00', score: null, winner: null, completed: false },
@@ -664,7 +664,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const today = new Date();
         const todayStr = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
         
-        // Filter matches for today's date (including both upcoming and live matches)
+        // Filter matches for today's date (including upcoming, live, and today matches)
         const todayMatches = matches.filter(match => match.date === todayStr && match.status !== 'pending');
         
         const liveMatchContainer = document.querySelector('.matches-container');
@@ -680,6 +680,11 @@ document.addEventListener('DOMContentLoaded', () => {
             todayMatches.forEach(match => {
                 const matchCard = document.createElement('div');
                 matchCard.classList.add('match-card', 'live-match');
+                
+                // Add specific class based on status
+                if (match.status === 'live') {
+                    matchCard.classList.add('live-match');
+                }
 
                 // Set default scores if match doesn't have a score yet
                 const team1Score = match.score && match.score.team1 !== undefined ? match.score.team1 : '0';
@@ -689,7 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 matchCard.innerHTML = `
                     <div class="match-header">
-                        <span class="match-status live">TODAY</span>
+                        <span class="match-status ${match.status}">${match.status.toUpperCase()}</span>
                         <span class="match-timer">${match.time}</span>
                     </div>
                     <div class="match-teams">
@@ -953,6 +958,162 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    
+    // Show pending matches notification
+    function showPendingMatchesNotification() {
+        // Get pending matches
+        const pendingMatches = matches.filter(match => match.status === 'pending');
+        
+        if (pendingMatches.length > 0) {
+            // Create notification popup
+            const notification = document.createElement('div');
+            notification.id = 'pending-matches-notification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+                backdrop-filter: blur(5px);
+            `;
+            
+            notification.innerHTML = `
+                <div style="
+                    background: #1a1a1a;
+                    border: 2px solid #00ffff;
+                    border-radius: 10px;
+                    padding: 30px;
+                    width: 80%;
+                    max-width: 500px;
+                    text-align: center;
+                    box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+                    position: relative;
+                ">
+                    <span id="close-notification-x" style="
+                        position: absolute;
+                        top: 10px;
+                        right: 15px;
+                        font-size: 1.5rem;
+                        color: #ff0000;
+                        cursor: pointer;
+                        font-weight: bold;
+                        z-index: 10000;
+                    ">&times;</span>
+                    <h2 style="
+                        color: #00ffff;
+                        font-family: 'Orbitron', sans-serif;
+                        margin-top: 0;
+                        text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+                        padding-top: 10px;
+                    ">
+                        <i class="fas fa-exclamation-triangle"></i> PENDING MATCHES ALERT
+                    </h2>
+                    <p style="color: #ffffff; margin: 20px 0;">
+                        There are pending matches that require attention:
+                    </p>
+                    <div style="max-height: 200px; overflow-y: auto; margin: 20px 0; text-align: left;">
+                        ${pendingMatches.map(match => `
+                            <div style="
+                                background: rgba(26, 26, 26, 0.7);
+                                border: 1px solid #00ffff;
+                                border-radius: 5px;
+                                padding: 10px;
+                                margin: 10px 0;
+                            ">
+                                <strong>${match.team1}</strong> vs <strong>${match.team2}</strong>
+                                <br>
+                                <small>Date: ${match.date} at ${match.time}</small>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div id="countdown-timer" style="
+                        font-size: 0.9rem;
+                        font-weight: bold;
+                        color: #ffff00;
+                        margin: 15px 0;
+                        padding: 8px;
+                        background: rgba(0, 0, 0, 0.5);
+                        border: 1px solid #ffff00;
+                        border-radius: 5px;
+                        font-family: 'Orbitron', sans-serif;
+                    ">
+                        Loading...
+                    </div>
+                    <p style="color: #ffffff; margin: 20px 0;">
+                        Make sure this match is completed as soon as possible before Friday, October 24, 2025 at 23:59 WIB
+                    </p>
+                    <button id="close-notification" style="
+                        background: linear-gradient(135deg, #00ffff, #ff00ff);
+                        color: #0a0a0a;
+                        border: none;
+                        padding: 12px 30px;
+                        border-radius: 5px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        font-family: 'Montserrat', sans-serif;
+                        text-transform: uppercase;
+                        letter-spacing: 1px;
+                        box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+                        transition: all 0.3s ease;
+                    ">OK</button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Add countdown timer
+            const countdownElement = document.getElementById('countdown-timer');
+            const deadline = new Date('2025-10-24T23:59:59+07:00'); // WIB timezone is UTC+7
+            
+            function updateCountdown() {
+                const now = new Date();
+                const timeDiff = deadline - now;
+                
+                if (timeDiff <= 0) {
+                    countdownElement.textContent = 'DEADLINE REACHED!';
+                    return;
+                }
+                
+                const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+                
+                countdownElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s left`;
+            }
+            
+            // Update countdown immediately and then every second
+            updateCountdown();
+            const countdownInterval = setInterval(updateCountdown, 1000);
+            
+            // Set automatic close after 5 seconds
+            const autoCloseTimeout = setTimeout(() => {
+                clearInterval(countdownInterval); // Clear the countdown interval
+                if (document.body.contains(notification)) { // Check if notification still exists
+                    document.body.removeChild(notification);
+                }
+            }, 5000); // 5 seconds
+            
+            // Add event listener to close button (OK)
+            document.getElementById('close-notification').addEventListener('click', function() {
+                clearTimeout(autoCloseTimeout); // Clear the auto-close timeout
+                clearInterval(countdownInterval); // Clear the interval to prevent memory leaks
+                document.body.removeChild(notification);
+            });
+            
+            // Add event listener to close button (X)
+            document.getElementById('close-notification-x').addEventListener('click', function() {
+                clearTimeout(autoCloseTimeout); // Clear the auto-close timeout
+                clearInterval(countdownInterval); // Clear the interval to prevent memory leaks
+                document.body.removeChild(notification);
+            });
+        }
+    }
 
     // ========================
     // Initialization
@@ -973,6 +1134,9 @@ document.addEventListener('DOMContentLoaded', () => {
         initParticles();
         addViewResultButtonListeners();
         initIntersectionObserver();
+        
+        // Show pending matches notification on first visit or refresh
+        showPendingMatchesNotification();
     }
 
     // Initialize the app after DOM is loaded
