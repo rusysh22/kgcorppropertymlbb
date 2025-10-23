@@ -305,6 +305,19 @@ body {
     display: block;
 }
 
+.tab-instruction {
+    margin: 20px auto;
+    padding: 15px;
+    background-color: rgba(0, 255, 255, 0.1);
+    border: 1px solid var(--accent-color);
+    border-radius: var(--border-radius);
+    font-style: italic;
+    text-align: center;
+    color: var(--text-color);
+    font-size: 1rem;
+    max-width: 80%;
+}
+
 /* Schedule Grid and Match Cards */
 .schedule-grid {
     display: grid;
@@ -454,10 +467,34 @@ body {
     justify-content: flex-end;
 }
 
+.team-info {
+    position: relative;
+    overflow: hidden;
+    max-width: 120px; /* Limit width to prevent layout breakage */
+    min-height: 1.5em; /* Ensure space for text */
+}
+
 .team-info h3 {
     font-family: 'Orbitron', sans-serif;
     color: var(--accent-color);
     margin-bottom: 5px;
+    white-space: nowrap;
+    position: relative;
+    display: inline-block;
+}
+
+.team-info h3.sliding-text {
+    animation: slideText 6s linear infinite;
+    padding-right: 100%; /* Very wide padding to ensure full text visibility */
+}
+
+@keyframes slideText {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(-100%);
+    }
 }
 
 .team-info p {
@@ -941,6 +978,79 @@ body {
     flex-wrap: wrap;
 }
 
+/* Specific responsive styles for completed matches in schedule */
+#completed-tab .team-info {
+    position: relative;
+    overflow: hidden;
+    max-width: 100px; /* Smaller max-width for schedule view */
+    min-height: 1.5em; /* Ensure space for text */
+}
+
+#completed-tab .team-info h3 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent-color);
+    margin-bottom: 5px;
+    white-space: nowrap;
+    position: relative;
+    display: inline-block;
+}
+
+/* Specific responsive styles for completed matches in results section */
+.results-grid .team-info {
+    position: relative;
+    overflow: hidden;
+    max-width: 100px; /* Smaller max-width for results view */
+    min-height: 1.5em; /* Ensure space for text */
+}
+
+.results-grid .team-info h3 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent-color);
+    margin-bottom: 5px;
+    white-space: nowrap;
+    position: relative;
+    display: inline-block;
+}
+
+/* Style for sliding animation */
+.team-info h3.sliding-text {
+    animation: slideText 6s linear infinite;
+    padding-right: 100%; /* Very wide padding to ensure full text visibility */
+}
+
+/* Responsive team names in mobile view for completed matches */
+@media (max-width: 768px) {
+    #completed-tab .team-info h3 {
+        font-size: 1rem;
+        max-width: 80px; /* Even smaller for mobile */
+    }
+    
+    .results-grid .team-info h3 {
+        font-size: 1rem;
+        max-width: 80px; /* Even smaller for mobile */
+    }
+    
+    #completed-tab .team-info,
+    .results-grid .team-info {
+        max-width: 80px; /* Even smaller for mobile */
+    }
+    
+    #completed-tab .team-info h3.sliding-text,
+    .results-grid .team-info h3.sliding-text {
+        animation: slideTextMobile 5s linear infinite; /* Faster animation for smaller width */
+        padding-right: 100%; /* Very wide padding to ensure full text visibility */
+    }
+    
+    @keyframes slideTextMobile {
+        from {
+            transform: translateX(100%);
+        }
+        to {
+            transform: translateX(-100%);
+        }
+    }
+}
+
 .match-images img {
     max-width: 100px;
     height: auto;
@@ -1419,8 +1529,23 @@ body {
         font-size: 1.5rem;
     }
     
+    .team-info {
+        position: relative;
+        overflow: hidden;
+        max-width: 100px; /* Smaller max-width for mobile */
+        min-height: 1.5em; /* Ensure space for text */
+    }
+
     .team-info h3 {
         font-size: 1.2rem;
+        white-space: nowrap;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .team-info h3.sliding-text {
+        animation: slideTextMobile 5s linear infinite;
+        padding-right: 100%; /* Very wide padding to ensure full text visibility */
     }
     
     .vs {

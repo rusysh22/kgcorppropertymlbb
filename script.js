@@ -12,10 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'pending', date: '2025-10-20', time: '17:30', score: null, winner: null, completed: false },
         { id: 3, team1: 'CFP', team2: 'ENG', status: 'completed', date: '2025-10-21', time: '21:00', score: { team1: 2, team2: 0 }, winner: 'CFP', completed: true },
         { id: 4, team1: 'CFP', team2: 'CITIS', status: 'pending', date: '2025-10-21', time: '18:00', score: null, winner: null, completed: false },
-        { id: 5, team1: 'ACC/TAX/FSD', team2: 'AUDIT', status: 'today', date: '2025-10-22', time: '17:00', score: { team1: 0, team2: 0 }, winner: null, completed: false },
+        { id: 5, team1: 'ACC/TAX/FSD', team2: 'AUDIT', status: 'completed', date: '2025-10-22', time: '17:00', score: { team1: 2, team2: 0 }, winner: 'ACC/TAX/FSD', completed:true },
         { id: 6, team1: 'ENG', team2: 'CITIS', status: 'completed', date: '2025-10-22', time: '12:30', score: { team1: 0, team2: 2 }, winner: 'CITIS', completed: true },
         { id: 7, team1: 'CFP', team2: 'ACC/TAX/FSD', status: 'completed', date: '2025-10-22', time: '12:30', score: { team1: 2, team2: 0 }, winner: 'CFP', completed: true },
-        { id: 8, team1: 'AUDIT', team2: 'CITIS', status: 'upcoming', date: '2025-10-23', time: '17:00', score: null, winner: null, completed: false },
+        { id: 8, team1: 'AUDIT', team2: 'CITIS', status: 'today', date: '2025-10-23', time: '17:00', score: { team1: 0, team2: 0 }, winner: null, completed: false },
         { id: 9, team1: 'ENG', team2: 'ACC/TAX/FSD', status: 'upcoming', date: '2025-10-24', time: '17:00', score: null, winner: null, completed: false },
         { id: 10, team1: 'CFP', team2: 'AUDIT', status: 'upcoming', date: '2025-10-24', time: '17:00', score: null, winner: null, completed: false },
     ];
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contact: { name: 'Dani', phone: '+62 823-3156-5773' }
         },
         'CITIS': { 
-            players: ['IngusPenguin', '-dominic', 'Bita_1114', 'canonball', 'tas.gemblok', 'Fifi', 'Titus'],
+            players: ['IngusPinguin', '-dominic', 'Bita_1114', 'canonball', 'tas.gemblok', 'firequadr (Fifi)', 'πng (Titus)'],
             color: '#ffff00',
             contact: { name: 'Dinda', phone: '+62 857-1895-6130' }
         },
@@ -139,13 +139,42 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener('click', () => {
                 const tabId = btn.getAttribute('data-tab');
                 
-                // Remove active class from all buttons and content
+                // Remove active class from all buttons and content (normal tab behavior)
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                 
-                // Add active class to clicked button and corresponding content
+                // Add active class to clicked button
                 btn.classList.add('active');
-                document.getElementById(`${tabId}-tab`).classList.add('active');
+                
+                if (tabId === 'completed') {
+                    // For completed tab, show only instruction
+                    const completedTab = document.getElementById('completed-tab');
+                    if (completedTab) {
+                        completedTab.classList.add('active');
+                        
+                        // Clear all content and show only instruction
+                        completedTab.innerHTML = '';
+                        
+                        // Add instruction message to the completed tab
+                        const instructionMessage = document.createElement('p');
+                        instructionMessage.className = 'tab-instruction';
+                        instructionMessage.innerHTML = 'Completed match results are displayed in the <strong>Match Results</strong> section below.';
+                        
+                        completedTab.appendChild(instructionMessage);
+                    }
+                    
+                    // Scroll to results section as well
+                    const resultsSection = document.getElementById('results');
+                    if (resultsSection) {
+                        // Use setTimeout to allow DOM update before scroll
+                        setTimeout(() => {
+                            resultsSection.scrollIntoView({ behavior: 'smooth' });
+                        }, 300);
+                    }
+                } else {
+                    // For other tabs (upcoming, pending), show the content normally
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                }
             });
         });
     }
@@ -158,13 +187,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function calculateStandings(matches) {
         const teams = {};
         
-        // Initialize teams with zero values
+        // Initialize teams with zero values (removed draws since we're removing the draw column)
         Object.keys(teamsData).forEach(teamName => {
             teams[teamName] = {
                 name: teamName,
                 wins: 0,
                 losses: 0,
-                draws: 0,
+                // Removed draws property since we're removing the draw column
                 played: 0,
                 points: 0,
                 form: [] // Last 5 matches
@@ -181,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     teams[team1].played++;
                     teams[team2].played++;
                     
-                    // Update form (add result to form array)
+                    // Update form and stats (only for wins/losses, exclude draws)
                     if (winner === team1) {
                         teams[team1].form.push('W');
                         teams[team2].form.push('L');
@@ -194,15 +223,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         teams[team2].wins++;
                         teams[team1].losses++;
                         teams[team2].points += 3; // 3 points for win
-                    } else if (match.status === 'completed' && winner === null) {
-                        // Draw case
-                        teams[team1].form.push('D');
-                        teams[team2].form.push('D');
-                        teams[team1].draws++;
-                        teams[team2].draws++;
-                        teams[team1].points += 1;
-                        teams[team2].points += 1;
                     }
+                    // Removed handling for draws since we're removing the draw column
+                    // If there's a match with winner === null, it won't affect standings
                     
                     // Keep only last 5 matches in form
                     if (teams[team1].form.length > 5) {
@@ -241,15 +264,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const pendingMatches = matches
             .filter(match => match.status === 'pending')
             .sort((a, b) => new Date(a.date) - new Date(b.date));
-            
-        // Get completed matches and sort by date (most recent first)
-        const completedMatches = matches
-            .filter(match => match.completed)
-            .sort((a, b) => new Date(b.date) - new Date(a.date));
 
         const upcomingContainer = document.querySelector('#upcoming-tab .schedule-grid');
         const pendingContainer = document.querySelector('#pending-tab .schedule-grid');
-        const completedContainer = document.querySelector('#completed-tab .schedule-grid');
 
         if (upcomingContainer) {
             upcomingContainer.innerHTML = '';
@@ -312,61 +329,62 @@ document.addEventListener('DOMContentLoaded', () => {
                 pendingContainer.appendChild(matchCard);
             });
         }
-
-        if (completedContainer) {
-            completedContainer.innerHTML = '';
-            completedMatches.forEach(match => {
-                const matchCard = document.createElement('div');
-                matchCard.classList.add('match-card');
-
-                matchCard.innerHTML = `
-                    <div class="match-header">
-                        <span class="match-status">COMPLETED</span>
-                        <div class="match-time">Completed</div>
-                    </div>
-                    <div class="match-teams">
-                        <div class="team team-left ${match.winner === match.team1 ? 'match-winner' : ''}">
-                            <div class="team-info">
-                                <h3>${match.team1}</h3>
-                            </div>
-                            <div class="team-score">
-                                <span class="score">${match.score.team1}</span>
-                            </div>
-                        </div>
-                        <div class="vs">VS</div>
-                        <div class="team team-right ${match.winner === match.team2 ? 'match-winner' : ''}">
-                            <div class="team-score">
-                                <span class="score">${match.score.team2}</span>
-                            </div>
-                            <div class="team-info">
-                                <h3>${match.team2}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="match-result-actions">
-                        <button class="view-result-btn" data-match-id="${match.id}">View Result</button>
-                    </div>
-                    <div class="match-details">
-                        <p><i class="fas fa-trophy"></i> Winner: ${match.winner || 'Draw'}</p>
-                        <p><i class="fas fa-calendar"></i> ${match.date} at ${match.time}</p>
-                    </div>
-                `;
-                completedContainer.appendChild(matchCard);
-            });
-        }
     }
     
     // Render results
     function renderResults() {
-        // Get completed matches and sort them by date (most recent first)
-        const completedMatches = matches
-            .filter(match => match.completed && match.status !== 'pending')
+        // Get completed matches with a clear winner (not draws) and sort them by date (most recent first)
+        const completedMatchesWithWinner = matches
+            .filter(match => match.completed && match.status !== 'pending' && match.winner !== null)
             .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
 
         const resultsContainer = document.querySelector('.results-grid');
 
         if (resultsContainer) {
-            resultsContainer.innerHTML = '<p class="no-results">No results yet. Check back after matches are completed.</p>';
+            if (completedMatchesWithWinner.length > 0) {
+                resultsContainer.innerHTML = '';
+                completedMatchesWithWinner.forEach(match => {
+                    const resultCard = document.createElement('div');
+                    resultCard.classList.add('match-card');
+
+                    resultCard.innerHTML = `
+                        <div class="match-header">
+                            <span class="match-status">RESULT</span>
+                            <div class="match-time">${match.date}</div>
+                        </div>
+                        <div class="match-teams">
+                            <div class="team team-left ${match.winner === match.team1 ? 'match-winner' : ''}">
+                                <div class="team-info">
+                                    <h3>${match.team1}</h3>
+                                </div>
+                                <div class="team-score">
+                                    <span class="score">${match.score.team1}</span>
+                                </div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team team-right ${match.winner === match.team2 ? 'match-winner' : ''}">
+                                <div class="team-score">
+                                    <span class="score">${match.score.team2}</span>
+                                </div>
+                                <div class="team-info">
+                                    <h3>${match.team2}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="match-result-actions">
+                            <button class="view-result-btn" data-match-id="${match.id}">View Result</button>
+                        </div>
+                        <div class="match-details">
+                            <p><i class="fas fa-trophy"></i> Winner: ${match.winner}</p>
+                            <p><i class="fas fa-calendar"></i> ${match.date} at ${match.time}</p>
+                        </div>
+                    `;
+
+                    resultsContainer.appendChild(resultCard);
+                });
+            } else {
+                resultsContainer.innerHTML = '<p class="no-results">No decisive results yet. Check back after matches are completed.</p>';
+            }
         }
     }
     
@@ -381,18 +399,10 @@ document.addEventListener('DOMContentLoaded', () => {
             standings.forEach((team, index) => {
                 const row = document.createElement('tr');
 
-                // Format form string (show last 5 matches)
-                let formString = '';
-                if (team.form.length > 0) {
-                    formString = team.form.join(' ');
-                } else {
-                    formString = 'N/A';
-                }
+                // Calculate total matches played (excluding draws since we're removing the draw column)
+                const played = team.wins + team.losses; // Removed team.draws from calculation
 
-                // Calculate total matches played
-                const played = team.wins + team.losses + team.draws;
-
-                // Create form indicators HTML using colored circles
+                // Create form indicators HTML using colored circles (excluding draws)
                 let formIndicators = '';
                 if (team.form.length > 0) {
                     formIndicators = team.form.map(result => {
@@ -400,9 +410,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             return '<span class="form-win" title="Win"></span>';
                         } else if (result === 'L') {
                             return '<span class="form-loss" title="Loss"></span>';
-                        } else if (result === 'D') {
-                            return '<span class="form-draw" title="Draw"></span>';
                         }
+                        // Removed 'D' (Draw) indicator since we're removing the draw column
                         return '';
                     }).join('');
                 } else {
@@ -414,7 +423,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${team.name}</td>
                     <td>${played}</td>
                     <td>${team.wins}</td>
-                    <td>${team.draws}</td>
                     <td>${team.losses}</td>
                     <td>${team.points}</td>
                     <td>${formIndicators}</td>
@@ -796,8 +804,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 let imagesLoaded = 0; // Counter for successfully loaded images
                 const loadedImages = []; // Store loaded images to append all at once later
 
-                // Check for multiple images (a, b, c, etc.)
-                const possibleSuffixes = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
+                // Check for multiple images (a, b)
+                const possibleSuffixes = ['a', 'b'];
 
                 // Try to load images with different suffixes
                 possibleSuffixes.forEach(suffix => {
@@ -1168,62 +1176,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    // Update results section to show completed matches
-    setTimeout(() => {
-        const resultsContainer = document.querySelector('.results-grid');
-        if (resultsContainer) {
-            // Get completed matches from the global matches array
-            const completedMatches = matches
-                .filter(match => match.completed && match.status !== 'pending')
-                .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
 
-            if (completedMatches.length > 0) {
-                resultsContainer.innerHTML = '';
 
-                completedMatches.forEach(match => {
-                    const resultCard = document.createElement('div');
-                    resultCard.classList.add('match-card');
 
-                    resultCard.innerHTML = `
-                        <div class="match-header">
-                            <span class="match-status">COMPLETED</span>
-                            <div class="match-time">${match.date}</div>
-                        </div>
-                        <div class="match-teams">
-                            <div class="team team-left ${match.winner === match.team1 ? 'match-winner' : ''}">
-                                <div class="team-info">
-                                    <h3>${match.team1}</h3>
-                                </div>
-                                <div class="team-score">
-                                    <span class="score">${match.score.team1}</span>
-                                </div>
-                            </div>
-                            <div class="vs">VS</div>
-                            <div class="team team-right ${match.winner === match.team2 ? 'match-winner' : ''}">
-                                <div class="team-score">
-                                    <span class="score">${match.score.team2}</span>
-                                </div>
-                                <div class="team-info">
-                                    <h3>${match.team2}</h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="match-result-actions">
-                            <button class="view-result-btn" data-match-id="${match.id}">View Result</button>
-                        </div>
-                        <div class="match-details">
-                            <p><i class="fas fa-trophy"></i> Winner: ${match.winner || 'Draw'}</p>
-                            <p><i class="fas fa-calendar"></i> ${match.date} at ${match.time}</p>
-                        </div>
-                    `;
-
-                    resultsContainer.appendChild(resultCard);
-                });
-            } else {
-                resultsContainer.innerHTML = '<p class="no-results">No results yet. Check back soon!</p>';
-            }
+    // Function to add sliding animation to long team names for completed matches
+    function addSlidingAnimationToTeamNames() {
+        // For completed matches in schedule
+        const completedTab = document.getElementById('completed-tab');
+        if (completedTab) {
+            const teamNamesInCompleted = completedTab.querySelectorAll('.team-info h3');
+            teamNamesInCompleted.forEach(teamName => {
+                // Check if the text overflows the container
+                if (teamName.scrollWidth > teamName.clientWidth) {
+                    teamName.classList.add('sliding-text');
+                }
+            });
         }
-    }, 100); // Small delay to ensure DOM is ready
 
+        // For results section
+        const resultsSection = document.querySelector('.results-grid');
+        if (resultsSection) {
+            const teamNamesInResults = resultsSection.querySelectorAll('.team-info h3');
+            teamNamesInResults.forEach(teamName => {
+                // Check if the text overflows the container
+                if (teamName.scrollWidth > teamName.clientWidth) {
+                    teamName.classList.add('sliding-text');
+                }
+            });
+        }
+    }
 
+    // Call the function after a short delay to ensure DOM is updated
+    setTimeout(addSlidingAnimationToTeamNames, 200);
+
+    // Add event listener for tab changes to add sliding animation when switching to completed tab
+    document.querySelectorAll('.tab-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            setTimeout(addSlidingAnimationToTeamNames, 100);
+        });
+    });
 });
