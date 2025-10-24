@@ -11,13 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 1, team1: 'ENG', team2: 'AUDIT', status: 'completed', date: '2025-10-20', time: '17:00', score: { team1: 0, team2: 2 }, winner: 'AUDIT', completed: true },
         { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'pending', date: '2025-10-20', time: '17:30', score: null, winner: null, completed: false },
         { id: 3, team1: 'CFP', team2: 'ENG', status: 'completed', date: '2025-10-21', time: '21:00', score: { team1: 2, team2: 0 }, winner: 'CFP', completed: true },
-        { id: 4, team1: 'CFP', team2: 'CITIS', status: 'pending', date: '2025-10-21', time: '18:00', score: null, winner: null, completed: false },
+        { id: 4, team1: 'CFP', team2: 'CITIS', status: 'completed', date: '2025-10-23', time: '17:00', score: { team1: 2, team2: 0 }, winner: 'CFP', completed: true },
         { id: 5, team1: 'ACC/TAX/FSD', team2: 'AUDIT', status: 'completed', date: '2025-10-22', time: '17:00', score: { team1: 2, team2: 0 }, winner: 'ACC/TAX/FSD', completed:true },
         { id: 6, team1: 'ENG', team2: 'CITIS', status: 'completed', date: '2025-10-22', time: '12:30', score: { team1: 0, team2: 2 }, winner: 'CITIS', completed: true },
         { id: 7, team1: 'CFP', team2: 'ACC/TAX/FSD', status: 'completed', date: '2025-10-22', time: '12:30', score: { team1: 2, team2: 0 }, winner: 'CFP', completed: true },
-        { id: 8, team1: 'AUDIT', team2: 'CITIS', status: 'today', date: '2025-10-23', time: '17:00', score: { team1: 0, team2: 0 }, winner: null, completed: false },
-        { id: 9, team1: 'ENG', team2: 'ACC/TAX/FSD', status: 'upcoming', date: '2025-10-24', time: '17:00', score: null, winner: null, completed: false },
-        { id: 10, team1: 'CFP', team2: 'AUDIT', status: 'upcoming', date: '2025-10-24', time: '17:00', score: null, winner: null, completed: false },
+        { id: 8, team1: 'AUDIT', team2: 'CITIS', status: 'completed', date: '2025-10-23', time: '21:00', score: { team1: 2, team2: 0 }, winner: 'AUDIT', completed: true },
+        { id: 9, team1: 'ENG', team2: 'ACC/TAX/FSD', status: 'today', date: '2025-10-24', time: '17:00', score: null, winner: null, completed: false },
+        { id: 10, team1: 'CFP', team2: 'AUDIT', status: 'today', date: '2025-10-24', time: '13:00', score: null, winner: null, completed: false },
     ];
     
     const teamsData = {
@@ -175,6 +175,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     // For other tabs (upcoming, pending), show the content normally
                     document.getElementById(`${tabId}-tab`).classList.add('active');
                 }
+                
+                // Update graph view if needed
+                if (tabId === 'results') {
+                    setTimeout(updateGraphView, 200);
+                }
             });
         });
     }
@@ -270,118 +275,235 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (upcomingContainer) {
             upcomingContainer.innerHTML = '';
-            upcomingMatches.forEach(match => {
-                const matchCard = document.createElement('div');
-                matchCard.classList.add('match-card');
-                matchCard.innerHTML = `
-                    <div class="match-header">
-                        <span class="match-status">UPCOMING</span>
-                        <div class="match-time">${match.date} ${match.time}</div>
-                    </div>
-                    <div class="match-teams">
-                        <div class="team team-left">
-                            <div class="team-info">
-                                <h3>${match.team1}</h3>
-                            </div>
-                        </div>
-                        <div class="vs">VS</div>
-                        <div class="team team-right">
-                            <div class="team-info">
-                                <h3>${match.team2}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="match-details">
-                        <p><i class="fas fa-calendar"></i> ${match.date} at ${match.time}</p>
-                    </div>
-                `;
-                upcomingContainer.appendChild(matchCard);
-            });
-        }
-
-        if (pendingContainer) {
-            pendingContainer.innerHTML = '';
-            pendingMatches.forEach(match => {
-                const matchCard = document.createElement('div');
-                matchCard.classList.add('match-card', 'pending-match');
-                matchCard.innerHTML = `
-                    <div class="match-header">
-                        <span class="match-status pending">PENDING</span>
-                        <div class="match-time">${match.date} ${match.time}</div>
-                    </div>
-                    <div class="match-teams">
-                        <div class="team team-left">
-                            <div class="team-info">
-                                <h3>${match.team1}</h3>
-                            </div>
-                        </div>
-                        <div class="vs">VS</div>
-                        <div class="team team-right">
-                            <div class="team-info">
-                                <h3>${match.team2}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="match-details">
-                        <p><i class="fas fa-calendar"></i> ${match.date} at ${match.time}</p>
-                    </div>
-                `;
-                pendingContainer.appendChild(matchCard);
-            });
-        }
-    }
-    
-    // Render results
-    function renderResults() {
-        // Get completed matches with a clear winner (not draws) and sort them by date (most recent first)
-        const completedMatchesWithWinner = matches
-            .filter(match => match.completed && match.status !== 'pending' && match.winner !== null)
-            .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
-
-        const resultsContainer = document.querySelector('.results-grid');
-
-        if (resultsContainer) {
-            if (completedMatchesWithWinner.length > 0) {
-                resultsContainer.innerHTML = '';
-                completedMatchesWithWinner.forEach(match => {
-                    const resultCard = document.createElement('div');
-                    resultCard.classList.add('match-card');
-
-                    resultCard.innerHTML = `
+            if (upcomingMatches.length > 0) {
+                upcomingMatches.forEach(match => {
+                    const matchCard = document.createElement('div');
+                    matchCard.classList.add('match-card');
+                    matchCard.innerHTML = `
                         <div class="match-header">
-                            <span class="match-status">RESULT</span>
-                            <div class="match-time">${match.date}</div>
+                            <span class="match-status">UPCOMING</span>
+                            <div class="match-time">${match.date} ${match.time}</div>
                         </div>
                         <div class="match-teams">
-                            <div class="team team-left ${match.winner === match.team1 ? 'match-winner' : ''}">
+                            <div class="team team-left">
                                 <div class="team-info">
                                     <h3>${match.team1}</h3>
                                 </div>
-                                <div class="team-score">
-                                    <span class="score">${match.score.team1}</span>
-                                </div>
                             </div>
                             <div class="vs">VS</div>
-                            <div class="team team-right ${match.winner === match.team2 ? 'match-winner' : ''}">
-                                <div class="team-score">
-                                    <span class="score">${match.score.team2}</span>
-                                </div>
+                            <div class="team team-right">
                                 <div class="team-info">
                                     <h3>${match.team2}</h3>
                                 </div>
                             </div>
                         </div>
-                        <div class="match-result-actions">
-                            <button class="view-result-btn" data-match-id="${match.id}">View Result</button>
-                        </div>
                         <div class="match-details">
-                            <p><i class="fas fa-trophy"></i> Winner: ${match.winner}</p>
                             <p><i class="fas fa-calendar"></i> ${match.date} at ${match.time}</p>
                         </div>
                     `;
-
-                    resultsContainer.appendChild(resultCard);
+                    upcomingContainer.appendChild(matchCard);
                 });
+            } else {
+                upcomingContainer.innerHTML = '<p class="no-matches-message">No upcoming matches scheduled. All remaining matches will be held today!</p>';
+            }
+        }
+
+        if (pendingContainer) {
+            pendingContainer.innerHTML = '';
+            if (pendingMatches.length > 0) {
+                pendingMatches.forEach(match => {
+                    const matchCard = document.createElement('div');
+                    matchCard.classList.add('match-card', 'pending-match');
+                    matchCard.innerHTML = `
+                        <div class="match-header">
+                            <span class="match-status pending">PENDING</span>
+                            <div class="match-time">${match.date} ${match.time}</div>
+                        </div>
+                        <div class="match-teams">
+                            <div class="team team-left">
+                                <div class="team-info">
+                                    <h3>${match.team1}</h3>
+                                </div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team team-right">
+                                <div class="team-info">
+                                    <h3>${match.team2}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="match-details">
+                            <p><i class="fas fa-calendar"></i> ${match.date} at ${match.time}</p>
+                        </div>
+                    `;
+                    pendingContainer.appendChild(matchCard);
+                });
+            } else {
+                pendingContainer.innerHTML = '<p class="no-matches-message">No pending matches at this time.</p>';
+            }
+        }
+    }
+    
+    // Render results with sort, filter, and view functionality
+    function renderResults(sortOrder = 'desc', filterTeam = '', viewMode = 'grid') {
+        // Get completed matches with a clear winner (not draws)
+        let completedMatchesWithWinner = matches
+            .filter(match => match.completed && match.status !== 'pending' && match.winner !== null);
+
+        // Apply team filter if specified
+        if (filterTeam) {
+            completedMatchesWithWinner = completedMatchesWithWinner.filter(match => 
+                match.team1 === filterTeam || match.team2 === filterTeam
+            );
+        }
+
+        // Sort by date and time
+        completedMatchesWithWinner = completedMatchesWithWinner.sort((a, b) => {
+            // Create date objects with both date and time for accurate sorting
+            const dateA = new Date(`${a.date} ${a.time}`);
+            const dateB = new Date(`${b.date} ${b.time}`);
+            
+            if (sortOrder === 'asc') {
+                return dateA - dateB; // Ascending order (oldest first)
+            } else {
+                return dateB - dateA; // Descending order (newest first) - default
+            }
+        });
+
+        const resultsContainer = document.querySelector('.results-grid');
+
+        if (resultsContainer) {
+            // Clear container and set view mode class
+            resultsContainer.innerHTML = '';
+            resultsContainer.className = 'results-grid';
+            if (viewMode === 'kanban') {
+                resultsContainer.classList.add('kanban-view');
+            }
+
+            if (completedMatchesWithWinner.length > 0) {
+                if (viewMode === 'kanban') {
+                    // Group matches by date for kanban view
+                    const matchesByDate = {};
+                    
+                    completedMatchesWithWinner.forEach(match => {
+                        const matchDate = match.date;
+                        if (!matchesByDate[matchDate]) {
+                            matchesByDate[matchDate] = [];
+                        }
+                        matchesByDate[matchDate].push(match);
+                    });
+
+                    // Create kanban columns for each date
+                    Object.keys(matchesByDate).forEach(date => {
+                        const column = document.createElement('div');
+                        column.className = 'kanban-column';
+                        
+                        // Format date for display
+                        const formattedDate = new Date(date).toLocaleDateString('en-US', { 
+                            weekday: 'long', 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        });
+                        
+                        column.innerHTML = `
+                            <div class="kanban-column-header">
+                                <h3 class="kanban-column-title">${formattedDate}</h3>
+                                <span class="kanban-column-count">${matchesByDate[date].length}</span>
+                            </div>
+                            <div class="kanban-items">
+                            </div>
+                        `;
+                        
+                        const kanbanItemsContainer = column.querySelector('.kanban-items');
+                        
+                        matchesByDate[date].forEach(match => {
+                            const kanbanItem = document.createElement('div');
+                            kanbanItem.className = 'kanban-item';
+                            kanbanItem.innerHTML = `
+                                <div class="kanban-item-header">
+                                    <div class="match-time">${match.time}</div>
+                                    <span class="kanban-item-status">RESULT</span>
+                                </div>
+                                <div class="kanban-item-teams">
+                                    <div class="kanban-team ${match.winner === match.team1 ? 'match-winner' : ''}">
+                                        <div class="kanban-team-name">${match.team1}</div>
+                                        <div class="kanban-team-score">${match.score.team1}</div>
+                                    </div>
+                                    <div class="kanban-vs">VS</div>
+                                    <div class="kanban-team ${match.winner === match.team2 ? 'match-winner' : ''}">
+                                        <div class="kanban-team-score">${match.score.team2}</div>
+                                        <div class="kanban-team-name">${match.team2}</div>
+                                    </div>
+                                </div>
+                                <div class="kanban-item-details">
+                                    <p><i class="fas fa-trophy"></i> Winner: ${match.winner}</p>
+                                    <div class="match-result-actions">
+                                        <button class="view-result-btn" data-match-id="${match.id}">View Result</button>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            kanbanItemsContainer.appendChild(kanbanItem);
+                        });
+                        
+                        resultsContainer.appendChild(column);
+                    });
+                } else {
+                    if (viewMode === 'chart') {
+                        // Chart view - just render the graph and hide match cards
+                        resultsContainer.innerHTML = '';
+                        resultsContainer.className = 'results-grid chart-view';
+                        setTimeout(updateGraphView, 50); // Render the points chart
+                        
+                        // Add a message to indicate that chart is displayed
+                        const chartMessage = document.createElement('div');
+                        chartMessage.className = 'chart-message';
+                        chartMessage.innerHTML = '<p class="no-matches-message">Showing team points chart. Switch to Grid or Kanban view to see match results.</p>';
+                        resultsContainer.appendChild(chartMessage);
+                    } else {
+                        // Grid view (original format)
+                        completedMatchesWithWinner.forEach(match => {
+                            const resultCard = document.createElement('div');
+                            resultCard.classList.add('match-card');
+
+                            resultCard.innerHTML = `
+                                <div class="match-header">
+                                    <span class="match-status">RESULT</span>
+                                    <div class="match-time">${match.date} ${match.time}</div>
+                                </div>
+                                <div class="match-teams">
+                                    <div class="team team-left ${match.winner === match.team1 ? 'match-winner' : ''}">
+                                        <div class="team-info">
+                                            <h3>${match.team1}</h3>
+                                        </div>
+                                        <div class="team-score">
+                                            <span class="score">${match.score.team1}</span>
+                                        </div>
+                                    </div>
+                                    <div class="vs">VS</div>
+                                    <div class="team team-right ${match.winner === match.team2 ? 'match-winner' : ''}">
+                                        <div class="team-score">
+                                            <span class="score">${match.score.team2}</span>
+                                        </div>
+                                        <div class="team-info">
+                                            <h3>${match.team2}</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="match-result-actions">
+                                    <button class="view-result-btn" data-match-id="${match.id}">View Result</button>
+                                </div>
+                                <div class="match-details">
+                                    <p><i class="fas fa-trophy"></i> Winner: ${match.winner}</p>
+                                    <p><i class="fas fa-calendar"></i> ${match.date} at ${match.time}</p>
+                                </div>
+                            `;
+
+                            resultsContainer.appendChild(resultCard);
+                        });
+                    }
+                }
             } else {
                 resultsContainer.innerHTML = '<p class="no-results">No decisive results yet. Check back after matches are completed.</p>';
             }
@@ -949,6 +1071,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 overlay.remove();
             }
         });
+        
+        // Close popup with keyboard events
+        function handleKeyboardEvents(e, elementToRemove) {
+            if (e.key === 'Escape' || e.key === 'Enter') {
+                elementToRemove.remove();
+                document.removeEventListener('keydown', handleKeyboardEvents);
+            }
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            handleKeyboardEvents(e, overlay);
+        });
     }
 
     // Add event listeners to view result buttons
@@ -986,22 +1120,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                z-index: 9999;
+                z-index: 10000; /* Above initial alert */
                 backdrop-filter: blur(5px);
             `;
             
             notification.innerHTML = `
                 <div style="
                     background: #1a1a1a;
-                    border: 2px solid #00ffff;
+                    border: 2px solid #ff0000;
                     border-radius: 10px;
                     padding: 30px;
                     width: 80%;
                     max-width: 500px;
                     text-align: center;
-                    box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+                    box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
                     position: relative;
-                ">
+                " class="heartbeat">
                     <span id="close-notification-x" style="
                         position: absolute;
                         top: 10px;
@@ -1011,14 +1145,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         cursor: pointer;
                         font-weight: bold;
                         z-index: 10000;
-                    ">&times;</span>
+                    " class="heartbeat">&times;</span>
                     <h2 style="
-                        color: #00ffff;
+                        color: #ff0000;
                         font-family: 'Orbitron', sans-serif;
                         margin-top: 0;
-                        text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+                        text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
                         padding-top: 10px;
-                    ">
+                    " class="heartbeat">
                         <i class="fas fa-exclamation-triangle"></i> PENDING MATCHES ALERT
                     </h2>
                     <p style="color: #ffffff; margin: 20px 0;">
@@ -1042,14 +1176,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div id="countdown-timer" style="
                         font-size: 0.9rem;
                         font-weight: bold;
-                        color: #ffff00;
+                        color: #ff0000;
                         margin: 15px 0;
                         padding: 8px;
                         background: rgba(0, 0, 0, 0.5);
-                        border: 1px solid #ffff00;
+                        border: 1px solid #ff0000;
                         border-radius: 5px;
                         font-family: 'Orbitron', sans-serif;
-                    ">
+                        text-shadow: 0 0 5px red;
+                    " class="heartbeat">
                         Loading...
                     </div>
                     <p style="color: #ffffff; margin: 20px 0;">
@@ -1078,26 +1213,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const countdownElement = document.getElementById('countdown-timer');
             const deadline = new Date('2025-10-24T23:59:59+07:00'); // WIB timezone is UTC+7
             
-            function updateCountdown() {
-                const now = new Date();
-                const timeDiff = deadline - now;
-                
-                if (timeDiff <= 0) {
-                    countdownElement.textContent = 'DEADLINE REACHED!';
-                    return;
-                }
-                
-                const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-                
-                countdownElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s left`;
-            }
-            
-            // Update countdown immediately and then every second
-            updateCountdown();
-            const countdownInterval = setInterval(updateCountdown, 1000);
+            // Using the shared countdown functionality
+            const countdownInterval = startCountdown(deadline, countdownElement, 'heartbeat', 'DEADLINE REACHED!', '0 0 10px red, 0 0 20px red');
             
             // Set automatic close after 5 seconds
             const autoCloseTimeout = setTimeout(() => {
@@ -1120,12 +1237,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(countdownInterval); // Clear the interval to prevent memory leaks
                 document.body.removeChild(notification);
             });
+            
+            // Close popup when clicking outside the content
+            notification.addEventListener('click', function(event) {
+                if (event.target === notification) {
+                    clearTimeout(autoCloseTimeout); // Clear the auto-close timeout
+                    clearInterval(countdownInterval); // Clear the interval to prevent memory leaks
+                    document.body.removeChild(notification);
+                }
+            });
+            
+            // Close popup with keyboard events
+            function handleKeyboardEvents(e) {
+                if (e.key === 'Escape' || e.key === 'Enter') {
+                    clearTimeout(autoCloseTimeout); // Clear the auto-close timeout
+                    clearInterval(countdownInterval); // Clear the interval to prevent memory leaks
+                    document.body.removeChild(notification);
+                    document.removeEventListener('keydown', handleKeyboardEvents);
+                }
+            }
+            
+            document.addEventListener('keydown', handleKeyboardEvents);
         }
     }
 
     // ========================
     // Initialization
     // ========================
+    
+
     
     // Initialize all components
     function initApp() {
@@ -1134,7 +1274,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initSmoothScrolling();
         initTabs();
         renderSchedule();
-        renderResults();
+        renderResults('desc', '', 'grid'); // Default: sort by descending date/time, no team filter, grid view
         renderLeaderboard();
         renderTeams();
         updateLiveMatches();
@@ -1142,6 +1282,9 @@ document.addEventListener('DOMContentLoaded', () => {
         initParticles();
         addViewResultButtonListeners();
         initIntersectionObserver();
+        
+        // Initialize permanent alert
+        initPermanentAlert();
         
         // Show pending matches notification on first visit or refresh
         showPendingMatchesNotification();
@@ -1174,6 +1317,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update time every second
     setInterval(updateLocalTime, 1000);
 
+    // Shared function to handle countdown timers
+    function startCountdown(deadline, element, animationClass, completedText, textShadow) {
+        function updateCountdown() {
+            const now = new Date();
+            const timeDiff = deadline - now;
+            
+            if (timeDiff <= 0) {
+                element.textContent = completedText;
+                element.style.color = '#ff0000';
+                element.style.textShadow = textShadow;
+                element.classList.add(animationClass);
+                return;
+            }
+            
+            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+            
+            element.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+        
+        // Update countdown immediately and then every second
+        updateCountdown();
+        return setInterval(updateCountdown, 1000);
+    }
+
 
 
 
@@ -1193,11 +1363,21 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // For results section
+        // For results section (grid view)
         const resultsSection = document.querySelector('.results-grid');
         if (resultsSection) {
+            // Grid view team names
             const teamNamesInResults = resultsSection.querySelectorAll('.team-info h3');
             teamNamesInResults.forEach(teamName => {
+                // Check if the text overflows the container
+                if (teamName.scrollWidth > teamName.clientWidth) {
+                    teamName.classList.add('sliding-text');
+                }
+            });
+            
+            // Kanban view team names
+            const kanbanTeamNames = resultsSection.querySelectorAll('.kanban-team-name');
+            kanbanTeamNames.forEach(teamName => {
                 // Check if the text overflows the container
                 if (teamName.scrollWidth > teamName.clientWidth) {
                     teamName.classList.add('sliding-text');
@@ -1209,10 +1389,366 @@ document.addEventListener('DOMContentLoaded', () => {
     // Call the function after a short delay to ensure DOM is updated
     setTimeout(addSlidingAnimationToTeamNames, 200);
 
+    // Function to create and update graph view for results
+    function updateGraphView() {
+        const resultsContainer = document.querySelector('.results-grid');
+        if (!resultsContainer) return;
+        
+        // Check if we're in kanban view
+        if (!resultsContainer.classList.contains('kanban-view')) return;
+        
+        // Calculate team statistics
+        const standings = calculateStandings(matches);
+        
+        // Create or update the graph container
+        let graphContainer = document.getElementById('results-graph-container');
+        if (!graphContainer) {
+            graphContainer = document.createElement('div');
+            graphContainer.id = 'results-graph-container';
+            graphContainer.className = 'results-graph-container';
+            
+            // Insert at the top of the results container
+            resultsContainer.insertBefore(graphContainer, resultsContainer.firstChild);
+        }
+        
+        // Generate chart data
+        const teamNames = standings.map(team => team.name);
+        const pointsData = standings.map(team => team.points);
+        
+        // Create a canvas for the chart
+        let canvas = document.getElementById('points-chart');
+        if (!canvas) {
+            graphContainer.innerHTML = '<h3>Team Points Overview</h3><canvas id="points-chart" width="800" height="400"></canvas>';
+            canvas = document.getElementById('points-chart');
+        }
+        
+        // Draw the chart (simple bar chart implementation)
+        drawPointsChart(canvas, teamNames, pointsData);
+    }
+    
+    // Simple function to draw a points chart using canvas
+    function drawPointsChart(canvas, teamNames, pointsData) {
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        
+        // Clear canvas
+        ctx.clearRect(0, 0, width, height);
+        
+        // Background
+        ctx.fillStyle = '#0a0a0a';
+        ctx.fillRect(0, 0, width, height);
+        
+        if (teamNames.length === 0) return;
+        
+        // Calculate chart dimensions with margins
+        const margin = { top: 30, right: 30, bottom: 60, left: 60 };
+        const chartWidth = width - margin.left - margin.right;
+        const chartHeight = height - margin.top - margin.bottom;
+        
+        // Find the maximum points for scaling
+        const maxPoints = Math.max(...pointsData, 10); // Ensure minimum scale
+        
+        // Draw Y-axis grid lines and labels
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 1;
+        ctx.font = '12px Arial';
+        ctx.fillStyle = '#fff';
+        
+        // Draw Y axis
+        ctx.beginPath();
+        ctx.moveTo(margin.left, margin.top);
+        ctx.lineTo(margin.left, height - margin.bottom);
+        ctx.stroke();
+        
+        // Draw X axis
+        ctx.beginPath();
+        ctx.moveTo(margin.left, height - margin.bottom);
+        ctx.lineTo(width - margin.right, height - margin.bottom);
+        ctx.stroke();
+        
+        // Draw Y grid lines and labels
+        for (let i = 0; i <= 10; i++) {
+            const yValue = (maxPoints / 10) * i;
+            const y = height - margin.bottom - (yValue / maxPoints) * chartHeight;
+            
+            // Draw grid line
+            ctx.beginPath();
+            ctx.moveTo(margin.left, y);
+            ctx.lineTo(width - margin.right, y);
+            ctx.strokeStyle = '#333';
+            ctx.stroke();
+            
+            // Draw label
+            ctx.fillStyle = '#fff';
+            ctx.textAlign = 'right';
+            ctx.fillText(Math.round(yValue).toString(), margin.left - 5, y + 4);
+        }
+        
+        // Draw X axis labels and bars
+        const barWidth = Math.min(40, chartWidth / teamNames.length * 0.8);
+        const barSpacing = (chartWidth - (barWidth * teamNames.length)) / (teamNames.length + 1);
+        
+        for (let i = 0; i < teamNames.length; i++) {
+            const x = margin.left + barSpacing + i * (barWidth + barSpacing);
+            const barHeight = (pointsData[i] / maxPoints) * chartHeight;
+            const y = height - margin.bottom - barHeight;
+            
+            // Get team color for the bar
+            const teamColor = teamsData[teamNames[i]] ? teamsData[teamNames[i]].color : '#ffffff';
+            
+            // Draw bar
+            ctx.fillStyle = teamColor;
+            ctx.fillRect(x, y, barWidth, barHeight);
+            
+            // Draw bar border
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(x, y, barWidth, barHeight);
+            
+            // Draw team name below the bar
+            ctx.fillStyle = '#fff';
+            ctx.textAlign = 'center';
+            ctx.save();
+            ctx.translate(x + barWidth / 2, height - margin.bottom + 15);
+            ctx.rotate(-Math.PI / 4); // Rotate 45 degrees
+            ctx.fillText(teamNames[i], 0, 0);
+            ctx.restore();
+            
+            // Draw points value on top of bar
+            if (barHeight > 15) {
+                ctx.fillStyle = '#000';
+                ctx.textAlign = 'center';
+                ctx.font = 'bold 12px Arial';
+                ctx.fillText(pointsData[i].toString(), x + barWidth / 2, y + 12);
+            } else if (barHeight > 5) {
+                // If bar is too small, draw the text to the side
+                ctx.fillStyle = '#fff';
+                ctx.textAlign = 'center';
+                ctx.font = '12px Arial';
+                ctx.fillText(pointsData[i].toString(), x + barWidth / 2, y - 5);
+            }
+        }
+        
+        // Draw axis labels
+        ctx.fillStyle = '#fff';
+        ctx.textAlign = 'center';
+        ctx.font = 'bold 14px Arial';
+        ctx.fillText('Teams', width / 2, height - 5);
+        ctx.save();
+        ctx.translate(15, height / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText('Points', 0, 0);
+        ctx.restore();
+    }
+
     // Add event listener for tab changes to add sliding animation when switching to completed tab
     document.querySelectorAll('.tab-btn').forEach(button => {
         button.addEventListener('click', () => {
             setTimeout(addSlidingAnimationToTeamNames, 100);
         });
     });
+    
+    // Initialize permanent alert functionality
+    function initPermanentAlert() {
+        const permanentAlert = document.getElementById('permanent-alert');
+        
+        if (permanentAlert) {
+            // Add click event to show the countdown timer popup
+            permanentAlert.addEventListener('click', function() {
+                // Create a temporary expanded notification with countdown timer when clicked
+                const timerNotification = document.createElement('div');
+                timerNotification.id = 'permanent-alert-timer';
+                timerNotification.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 10001;
+                    backdrop-filter: blur(5px);
+                `;
+                
+                timerNotification.innerHTML = `
+                    <div style="
+                        background: #1a1a1a;
+                        border: 2px solid #ff0000;
+                        border-radius: 10px;
+                        padding: 30px;
+                        width: 80%;
+                        max-width: 500px;
+                        text-align: center;
+                        box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+                        position: relative;
+                    " class="zoom-in-out">
+                        <span id="close-permanent-alert-timer" style="
+                            position: absolute;
+                            top: 10px;
+                            right: 15px;
+                            font-size: 1.5rem;
+                            color: #ff0000;
+                            cursor: pointer;
+                            font-weight: bold;
+                            z-index: 10000;
+                        " class="heartbeat">&times;</span>
+                        <h2 style="
+                            color: #ff0000;
+                            font-family: 'Orbitron', sans-serif;
+                            margin-top: 0;
+                            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+                            padding-top: 10px;
+                        " class="zoom-in-out">
+                            <i class="fas fa-clock"></i> TOURNAMENT COUNTDOWN
+                        </h2>
+                        <p style="color: #ffffff; margin: 20px 0;">
+                            Time remaining until tournament deadline:
+                        </p>
+                        <div id="permanent-countdown-timer" style="
+                            font-size: 1.5rem;
+                            font-weight: bold;
+                            color: #ff0000;
+                            margin: 25px 0;
+                            padding: 15px;
+                            background: rgba(0, 0, 0, 0.5);
+                            border: 2px solid #ff0000;
+                            border-radius: 10px;
+                            font-family: 'Orbitron', sans-serif;
+                            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+                        " class="zoom-in-out">
+                            Loading...
+                        </div>
+                        <p style="color: #ffffff; margin: 20px 0;">
+                            Final deadline: Friday, October 24, 2025 at 23:59 WIB
+                        </p>
+                        <button id="close-permanent-alert-timer-btn" style="
+                            background: linear-gradient(135deg, #ff0000, #ff6b6b);
+                            color: #ffffff;
+                            border: none;
+                            padding: 12px 30px;
+                            border-radius: 5px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            font-family: 'Montserrat', sans-serif;
+                            text-transform: uppercase;
+                            letter-spacing: 1px;
+                            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+                            transition: all 0.3s ease;
+                        ">CLOSE</button>
+                    </div>
+                `;
+                
+                document.body.appendChild(timerNotification);
+                
+                // Add countdown timer functionality
+                const countdownElement = document.getElementById('permanent-countdown-timer');
+                const deadline = new Date('2025-10-24T23:59:59+07:00'); // WIB timezone is UTC+7
+                
+                // Using the shared countdown functionality
+                const countdownInterval = startCountdown(deadline, countdownElement, 'zoom-in-out', 'DEADLINE REACHED!', '0 0 10px red, 0 0 20px red');
+                
+                // Add event listener to close button
+                document.getElementById('close-permanent-alert-timer').addEventListener('click', function() {
+                    clearInterval(countdownInterval); // Clear the interval to prevent memory leaks
+                    document.body.removeChild(timerNotification);
+                });
+                
+                document.getElementById('close-permanent-alert-timer-btn').addEventListener('click', function() {
+                    clearInterval(countdownInterval); // Clear the interval to prevent memory leaks
+                    document.body.removeChild(timerNotification);
+                });
+                
+                // Close popup when clicking outside the content
+                timerNotification.addEventListener('click', function(event) {
+                    if (event.target === timerNotification) {
+                        clearInterval(countdownInterval); // Clear the interval to prevent memory leaks
+                        document.body.removeChild(timerNotification);
+                    }
+                });
+                
+                // Close popup with keyboard events
+                function handleKeyboardEvents(e) {
+                    if (e.key === 'Escape' || e.key === 'Enter') {
+                        clearInterval(countdownInterval); // Clear the interval to prevent memory leaks
+                        document.body.removeChild(timerNotification);
+                        document.removeEventListener('keydown', handleKeyboardEvents);
+                    }
+                }
+                
+                document.addEventListener('keydown', handleKeyboardEvents);
+            });
+        }
+    }
+    
+
+    
+    // Initialize results section with sort, filter, and view functionality
+    function initResultsControls() {
+        const sortOrderSelect = document.getElementById('resultsSortOrder');
+        const filterTeamSelect = document.getElementById('resultsFilterTeam');
+        const gridViewBtn = document.getElementById('gridViewBtn');
+        const kanbanViewBtn = document.getElementById('kanbanViewBtn');
+        
+        if (sortOrderSelect && filterTeamSelect && gridViewBtn && kanbanViewBtn) {
+            // Populate team filter dropdown
+            const uniqueTeams = [...new Set(matches.map(match => [match.team1, match.team2]).flat())];
+            filterTeamSelect.innerHTML = '<option value="">All Teams</option>'; // Reset options
+            
+            uniqueTeams.forEach(team => {
+                const option = document.createElement('option');
+                option.value = team;
+                option.textContent = team;
+                filterTeamSelect.appendChild(option);
+            });
+            
+            // Initialize view mode (default is grid)
+            let currentViewMode = 'grid';
+            
+            // Add event listeners for sort and filter changes
+            sortOrderSelect.addEventListener('change', () => {
+                const sortOrder = sortOrderSelect.value;
+                const filterTeam = filterTeamSelect.value;
+                renderResults(sortOrder, filterTeam, currentViewMode);
+                addSlidingAnimationToTeamNames(); // Reapply animations after re-rendering
+            });
+            
+            filterTeamSelect.addEventListener('change', () => {
+                const sortOrder = sortOrderSelect.value;
+                const filterTeam = filterTeamSelect.value;
+                renderResults(sortOrder, filterTeam, currentViewMode);
+                addSlidingAnimationToTeamNames(); // Reapply animations after re-rendering
+            });
+            
+            // Add event listeners for view mode toggle
+            gridViewBtn.addEventListener('click', () => {
+                currentViewMode = 'grid';
+                gridViewBtn.classList.add('active');
+                kanbanViewBtn.classList.remove('active');
+                
+                const sortOrder = sortOrderSelect.value;
+                const filterTeam = filterTeamSelect.value;
+                renderResults(sortOrder, filterTeam, currentViewMode);
+                addSlidingAnimationToTeamNames(); // Reapply animations after re-rendering
+            });
+            
+            kanbanViewBtn.addEventListener('click', () => {
+                currentViewMode = 'kanban';
+                kanbanViewBtn.classList.add('active');
+                gridViewBtn.classList.remove('active');
+                
+                const sortOrder = sortOrderSelect.value;
+                const filterTeam = filterTeamSelect.value;
+                renderResults(sortOrder, filterTeam, currentViewMode);
+                addSlidingAnimationToTeamNames(); // Reapply animations after re-rendering
+            });
+        }
+    }
+    
+    // Initialize the results controls after initial render
+    setTimeout(initResultsControls, 100);
+    
+
 });
