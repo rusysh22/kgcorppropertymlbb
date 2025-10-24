@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contact: { name: 'Yori', phone: '+62 877-7556-8776' }
         },
         'AUDIT': { 
-            players: ['Superjorrr (cici)', 'Iyelito', 'Koro', 'SquishyJorr', 'Na0mi Tier 1A.'],
+            players: ['Superjorrr (cici)', 'Iyelito', 'Koro', 'SquishyPapa', 'Na0mi Tier 1A.'],
             color: '#33ff57',
             contact: { name: 'Yoga', phone: '+62 838-1672-7039' }
         }
