@@ -9,14 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sample data - matches with live status for match 1 and 2, and upcoming matches scheduled from Oct 21-24, 2025
     const matches = [
         { id: 1, team1: 'ENG', team2: 'AUDIT', status: 'completed', date: '2025-10-20', time: '17:00', score: { team1: 0, team2: 2 }, winner: 'AUDIT', completed: true },
-        { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'pending', date: '2025-10-20', time: '17:30', score: null, winner: null, completed: false },
+        { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'today', date: '2025-10-24', time: '20:00', score: null, winner: null, completed: false },
         { id: 3, team1: 'CFP', team2: 'ENG', status: 'completed', date: '2025-10-21', time: '21:00', score: { team1: 2, team2: 0 }, winner: 'CFP', completed: true },
         { id: 4, team1: 'CFP', team2: 'CITIS', status: 'completed', date: '2025-10-23', time: '17:00', score: { team1: 2, team2: 0 }, winner: 'CFP', completed: true },
         { id: 5, team1: 'ACC/TAX/FSD', team2: 'AUDIT', status: 'completed', date: '2025-10-22', time: '17:00', score: { team1: 2, team2: 0 }, winner: 'ACC/TAX/FSD', completed:true },
         { id: 6, team1: 'ENG', team2: 'CITIS', status: 'completed', date: '2025-10-22', time: '12:30', score: { team1: 0, team2: 2 }, winner: 'CITIS', completed: true },
         { id: 7, team1: 'CFP', team2: 'ACC/TAX/FSD', status: 'completed', date: '2025-10-22', time: '12:30', score: { team1: 2, team2: 0 }, winner: 'CFP', completed: true },
         { id: 8, team1: 'AUDIT', team2: 'CITIS', status: 'completed', date: '2025-10-23', time: '21:00', score: { team1: 2, team2: 0 }, winner: 'AUDIT', completed: true },
-        { id: 9, team1: 'ENG', team2: 'ACC/TAX/FSD', status: 'today', date: '2025-10-24', time: '17:00', score: null, winner: null, completed: false },
+        { id: 9, team1: 'ENG', team2: 'ACC/TAX/FSD', status: 'completed', date: '2025-10-24', time: '17:00', score: { team1: 1, team2: 2 }, winner:'ACC/TAX/FSD', completed: true },
         { id: 10, team1: 'CFP', team2: 'AUDIT', status: 'completed', date: '2025-10-24', time: '13:00', score: { team1: 2, team2: 0 }, winner: 'CFP', completed: true },
     ];
     
