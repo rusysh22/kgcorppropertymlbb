@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 7, team1: 'CFP', team2: 'ACC/TAX/FSD', status: 'completed', date: '2025-10-22', time: '12:30', score: { team1: 2, team2: 0 }, winner: 'CFP', completed: true },
         { id: 8, team1: 'AUDIT', team2: 'CITIS', status: 'completed', date: '2025-10-23', time: '21:00', score: { team1: 2, team2: 0 }, winner: 'AUDIT', completed: true },
         { id: 9, team1: 'ENG', team2: 'ACC/TAX/FSD', status: 'today', date: '2025-10-24', time: '17:00', score: null, winner: null, completed: false },
-        { id: 10, team1: 'CFP', team2: 'AUDIT', status: 'today', date: '2025-10-24', time: '13:00', score: null, winner: null, completed: false },
+        { id: 10, team1: 'CFP', team2: 'AUDIT', status: 'completed', date: '2025-10-24', time: '13:00', score: { team1: 2, team2: 0 }, winner: 'CFP', completed: true },
     ];
     
     const teamsData = {
