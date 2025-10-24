@@ -39,11 +39,10 @@
                     <h1><i class="fas fa-gamepad" aria-hidden="true" title="Gamepad icon"></i> <span>KG CORPORATE/PROPERTY MLBB</span></h1>
                 </div>
                 <div class="nav-menu" id="nav-menu" role="menubar">
-                    <a href="#live" class="nav-link active" role="menuitem">Today Matches</a>
-                    <a href="#schedule" class="nav-link" role="menuitem">Schedule</a>
-                    <a href="#results" class="nav-link" role="menuitem">Results</a>
                     <a href="#leaderboard" class="nav-link" role="menuitem">Leaderboard</a>
+                    <a href="#results" class="nav-link" role="menuitem">Results</a>
                     <a href="#teams" class="nav-link" role="menuitem">Teams</a>
+                    <a href="#schedule" class="nav-link" role="menuitem">Schedule</a>
                 </div>
                 <div class="hamburger" id="hamburger" role="button" aria-label="Toggle navigation menu">
                     <span class="bar" aria-hidden="true"></span>
@@ -53,112 +52,17 @@
             </div>
         </nav>
 
-        <!-- Live Matches Section -->
+        <!-- Leaderboard Section (at the very top for completed tournament) -->
         <main>
-            <section id="live" class="section">
-                <div class="container">
-                    <header class="section-header">
-                        <h2><i class="fas fa-bolt" aria-hidden="true" title="Lightning icon"></i> TODAY MATCHES</h2>
-                        <div class="live-indicator">
-                            <span class="live-dot" aria-hidden="true"></span> TODAY
-                        </div>
-                    </header>
-                    <div class="matches-container">
-                        <div class="match-card live-match">
-                            <div class="match-header">
-                                <span class="match-status live">TODAY</span>
-                                <span class="match-timer">01:23:45</span>
-                            </div>
-                            <div class="match-teams">
-                                <div class="team team-left">
-                                    <div class="team-info">
-                                        <h3>ENG</h3>
-                                    </div>
-                                    <div class="team-score">
-                                        <span class="score">3</span>
-                                    </div>
-                                </div>
-                                <div class="vs">VS</div>
-                                <div class="team team-right">
-                                    <div class="team-score">
-                                        <span class="score">1</span>
-                                    </div>
-                                    <div class="team-info">
-                                        <h3>AUDIT</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Schedule Section -->
-            <section id="schedule" class="section">
-                <div class="container">
-                    <header class="section-header">
-                        <h2><i class="fas fa-calendar-alt" aria-hidden="true" title="Calendar icon"></i> MATCH SCHEDULE</h2>
-                        <div class="controls">
-                            <button class="tab-btn active" data-tab="upcoming">UPCOMING</button>
-                            <button class="tab-btn" data-tab="pending">PENDING</button>
-                            <button class="tab-btn" data-tab="completed">COMPLETED</button>
-                        </div>
-                    </header>
-                    <div class="schedule-tabs">
-                        <div class="tab-content active" id="upcoming-tab">
-                            <div class="schedule-grid">
-                                <!-- Upcoming matches will be dynamically inserted here -->
-                            </div>
-                        </div>
-                        <div class="tab-content" id="pending-tab">
-                            <div class="schedule-grid">
-                                <!-- Pending matches will be dynamically inserted here -->
-                            </div>
-                        </div>
-                        <div class="tab-content" id="completed-tab">
-                            <div class="schedule-grid">
-                                <!-- Completed matches will be dynamically inserted here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Results Section -->
-            <section id="results" class="section">
-                <div class="container">
-                    <header class="section-header">
-                        <h2><i class="fas fa-trophy" aria-hidden="true" title="Trophy icon"></i> MATCH RESULTS</h2>
-                        <div class="controls">
-                            <select class="sort-order" id="resultsSortOrder">
-                                <option value="desc">Newest First</option>
-                                <option value="asc">Oldest First</option>
-                            </select>
-                            <select class="filter-team" id="resultsFilterTeam">
-                                <option value="">All Teams</option>
-                                <!-- Team options will be populated dynamically -->
-                            </select>
-                            <div class="view-toggle">
-                                <button class="view-btn active" id="gridViewBtn" data-view="grid">Grid</button>
-                                <button class="view-btn" id="kanbanViewBtn" data-view="kanban">Kanban</button>
-                            </div>
-                        </div>
-                    </header>
-                    <div class="results-grid">
-                        <!-- Recent results will be dynamically inserted here -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- Leaderboard Section -->
             <section id="leaderboard" class="section">
                 <div class="container">
                     <header class="section-header">
-                        <h2><i class="fas fa-ranking-star" aria-hidden="true" title="Ranking star icon"></i> LEADERBOARD</h2>
+                        <h2><i class="fas fa-ranking-star" aria-hidden="true" title="Ranking star icon"></i> FINAL LEADERBOARD</h2>
                     </header>
                     <div class="leaderboard-container">
                         <table class="leaderboard-table">
                             <thead>
+                                <h3><i class="fas fa-trophy" aria-hidden="true" title="Trophy icon"></i> TOURNAMENT WINNERS</h3>
                                 <tr>
                                     <th>Rank</th>
                                     <th>Team</th>
@@ -196,11 +100,37 @@
                 </div>
             </section>
 
-            <!-- Teams Section -->
+            <!-- Results Section (detailed match results) -->
+            <section id="results" class="section">
+                <div class="container">
+                    <header class="section-header">
+                        <h2><i class="fas fa-trophy" aria-hidden="true" title="Trophy icon"></i> TOURNAMENT RESULTS</h2>
+                        <div class="controls">
+                            <select class="sort-order" id="resultsSortOrder">
+                                <option value="desc">Newest First</option>
+                                <option value="asc">Oldest First</option>
+                            </select>
+                            <select class="filter-team" id="resultsFilterTeam">
+                                <option value="">All Teams</option>
+                                <!-- Team options will be populated dynamically -->
+                            </select>
+                            <div class="view-toggle">
+                                <button class="view-btn active" id="gridViewBtn" data-view="grid">Grid</button>
+                                <button class="view-btn" id="kanbanViewBtn" data-view="kanban">Kanban</button>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="results-grid">
+                        <!-- Recent results will be dynamically inserted here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Teams Section (detailed team information) -->
             <section id="teams" class="section">
                 <div class="container">
                     <header class="section-header">
-                        <h2><i class="fas fa-users" aria-hidden="true" title="Users icon"></i> TEAMS</h2>
+                        <h2><i class="fas fa-users" aria-hidden="true" title="Users icon"></i> PARTICIPATING TEAMS</h2>
                     </header>
                     <div class="teams-grid">
                         <!-- Teams will be dynamically inserted here -->
@@ -210,6 +140,37 @@
                             <span class="close-modal" aria-label="Close modal">&times;</span>
                             <div class="team-detail-content">
                                 <!-- Team details will be shown here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Schedule Section (historical reference) -->
+            <section id="schedule" class="section">
+                <div class="container">
+                    <header class="section-header">
+                        <h2><i class="fas fa-calendar-alt" aria-hidden="true" title="Calendar icon"></i> MATCH SCHEDULE</h2>
+                        <div class="controls">
+                            <button class="tab-btn active" data-tab="upcoming">UPCOMING</button>
+                            <button class="tab-btn" data-tab="pending">PENDING</button>
+                            <button class="tab-btn" data-tab="completed">COMPLETED</button>
+                        </div>
+                    </header>
+                    <div class="schedule-tabs">
+                        <div class="tab-content active" id="upcoming-tab">
+                            <div class="schedule-grid">
+                                <!-- Upcoming matches will be dynamically inserted here -->
+                            </div>
+                        </div>
+                        <div class="tab-content" id="pending-tab">
+                            <div class="schedule-grid">
+                                <!-- Pending matches will be dynamically inserted here -->
+                            </div>
+                        </div>
+                        <div class="tab-content" id="completed-tab">
+                            <div class="schedule-grid">
+                                <!-- Completed matches will be dynamically inserted here -->
                             </div>
                         </div>
                     </div>
@@ -228,13 +189,35 @@
         <span id="timeText"></span>
     </div>
     
-    <!-- Permanent Alert in Bottom Right Corner -->
-    <div id="permanent-alert" class="permanent-alert">
-        <div class="alert-content">
-            <i class="fas fa-exclamation-triangle alert-icon"></i>
-            <span class="alert-text">Tournament Alert!</span>
+
+    
+    <!-- Game Ended Popup (initially hidden) -->
+    <div id="game-ended-popup" class="game-ended-popup" style="display: none;">
+        <div class="game-ended-content">
+            <div class="popup-fireworks-container"></div>
+            <h2><i class="fas fa-trophy"></i> TOURNAMENT COMPLETED</h2>
+            <h3 class="congrats-text">CONGRATS!</h3>
+            <p>Team <span class="winner-team">CFP</span> wins the championship!</p>
+            <div class="winners-section">
+                <div class="winner-card champion-card">
+                    <div class="place-label">1st Place</div>
+                    <div class="team-name">CFP</div>
+                    <div class="title"><i class="fas fa-crown"></i> CHAMPIONS</div>
+                </div>
+                <div class="winner-card runnerup-card">
+                    <div class="place-label">2nd Place</div>
+                    <div class="team-name">ACC/TAX/FSD</div>
+                    <div class="title"><i class="fas fa-medal"></i> RUNNER-UP</div>
+                </div>
+            </div>
+            <p class="thanks-message">What an amazing tournament!</p>
+            <p>Thank you to all participants for making this event memorable!</p>
+            <button class="close-popup-btn">Celebrate Victory</button>
         </div>
     </div>
+    
+    <!-- Fireworks Container -->
+    <div id="fireworks-container" class="fireworks-container"></div>
     
     <script src="script.js"></script>
 </body>

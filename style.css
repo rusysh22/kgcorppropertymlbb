@@ -1928,3 +1928,359 @@ body {
     margin-bottom: 15px;
     text-shadow: 0 0 10px var(--glow-color);
 }
+
+/* Game Ended Popup */
+.game-ended-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.9) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; /* Higher z-index than fireworks */
+    backdrop-filter: blur(5px);
+}
+
+.game-ended-content {
+    background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+    border: 3px solid #00ffff;
+    border-radius: var(--border-radius);
+    padding: 30px;
+    text-align: center;
+    max-width: 700px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.5), 0 0 60px rgba(255, 0, 255, 0.3);
+    animation: popupAppear 0.5s ease-out;
+    background-image: radial-gradient(circle at 10% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 20%),
+                      radial-gradient(circle at 90% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 20%);
+}
+
+@keyframes popupAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.game-ended-content h2 {
+    font-family: 'Orbitron', sans-serif;
+    color: #00ffff;
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+    animation: textGlow 2s infinite alternate;
+}
+
+@keyframes textGlow {
+    from {
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+    }
+    to {
+        text-shadow: 0 0 20px rgba(0, 255, 255, 0.9), 0 0 30px rgba(0, 255, 255, 0.6);
+    }
+}
+
+.game-ended-content h3 {
+    font-family: 'Orbitron', sans-serif;
+    color: #ffcc00;
+    font-size: 1.8rem;
+    margin: 15px 0;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+    animation: congratsGlow 2s infinite alternate;
+}
+
+@keyframes congratsGlow {
+    from {
+        text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+    }
+    to {
+        text-shadow: 0 0 20px rgba(255, 204, 0, 0.9), 0 0 30px rgba(255, 204, 0, 0.6);
+    }
+}
+
+.game-ended-content p {
+    font-size: 1.2rem;
+    margin: 15px 0;
+    color: #ffffff;
+    line-height: 1.6;
+}
+
+.thanks-message {
+    color: #ff00ff;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 20px 0;
+    animation: thanksPulse 2s infinite;
+    text-shadow: 0 0 10px rgba(255, 0, 255, 0.7);
+}
+
+@keyframes thanksPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.close-popup-btn {
+    background: linear-gradient(135deg, #ffcc00, #ff66cc);
+    color: #0a0a0a;
+    border: none;
+    padding: 12px 30px;
+    border-radius: var(--border-radius);
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    font-size: 1rem;
+}
+
+.close-popup-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.8);
+}
+
+/* Winners Section */
+.winners-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    gap: 10px;
+    position: relative;
+    z-index: 2; /* Ensure content is above fireworks */
+}
+
+.winner-card {
+    background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    flex: 1;
+    max-width: 200px;
+}
+
+.champion-card {
+    border: 2px solid #00ffff;
+}
+
+.runnerup-card {
+    border: 2px solid #ff00ff;
+}
+
+.place-label {
+    font-size: 1.2rem;
+    color: #00ffff;
+    font-weight: bold;
+}
+
+.champion-card .place-label {
+    color: #00ffff;
+}
+
+.runnerup-card .place-label {
+    color: #ff00ff;
+}
+
+.team-name {
+    font-size: 1.5rem;
+    color: #ffcc00;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.champion-card .team-name {
+    color: #ffcc00;
+}
+
+.runnerup-card .team-name {
+    color: #ff66cc;
+}
+
+.title {
+    color: #ffcc00;
+}
+
+.champion-card .title {
+    color: #ffcc00;
+}
+
+.runnerup-card .title {
+    color: #ff66cc;
+}
+
+/* Popup Fireworks Container */
+.popup-fireworks-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--border-radius);
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1; /* Behind the content */
+}
+
+.popup-firework {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.popup-firework-particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* Mobile Responsive for Game Ended Popup */
+@media (max-width: 768px) {
+    .game-ended-content {
+        padding: 20px;
+        max-width: 95%;
+        margin: 10px;
+    }
+    
+    .game-ended-content h2 {
+        font-size: 1.6rem;
+        margin-bottom: 10px;
+    }
+    
+    .congrats-text {
+        font-size: 1.4rem;
+    }
+    
+    .game-ended-content p {
+        font-size: 1rem;
+        margin: 10px 0;
+    }
+    
+    .thanks-message {
+        font-size: 1.2rem;
+        margin: 15px 0;
+    }
+    
+    .close-popup-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    /* Responsive layout for winner/runner-up cards */
+    .winners-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .winner-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 5px 0 !important;
+    }
+}
+
+/* Additional responsive styles for smaller mobile devices */
+@media (max-width: 480px) {
+    .game-ended-content {
+        padding: 15px;
+    }
+    
+    .game-ended-content h2 {
+        font-size: 1.4rem;
+    }
+    
+    .congrats-text {
+        font-size: 1.3rem;
+    }
+    
+    .winner-card {
+        padding: 12px;
+    }
+    
+    .place-label {
+        font-size: 1rem;
+    }
+    
+    .team-name {
+        font-size: 1.2rem;
+    }
+    
+    .title {
+        font-size: 0.9rem;
+    }
+}
+
+.fireworks-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9998; /* Lower z-index than popup */
+}
+
+.firework {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.firework-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.close-popup-btn {
+    background: linear-gradient(135deg, #00ffff, #ff00ff);
+    color: #0a0a0a;
+    border: none;
+    padding: 12px 30px;
+    border-radius: var(--border-radius);
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    font-size: 1rem;
+}
+
+.close-popup-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+}
+
+.close-popup-btn:active {
+    transform: translateY(0);
+}

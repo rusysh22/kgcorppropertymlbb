@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sample data - matches with live status for match 1 and 2, and upcoming matches scheduled from Oct 21-24, 2025
     const matches = [
         { id: 1, team1: 'ENG', team2: 'AUDIT', status: 'completed', date: '2025-10-20', time: '17:00', score: { team1: 0, team2: 2 }, winner: 'AUDIT', completed: true },
-        { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'today', date: '2025-10-24', time: '20:00', score: null, winner: null, completed: false },
+        { id: 2, team1: 'CITIS', team2: 'ACC/TAX/FSD', status: 'completed', date: '2025-10-24', time: '21:00', score: { team1: 0, team2: 2 }, winner: 'ACC/TAX/FSD', completed: true },
         { id: 3, team1: 'CFP', team2: 'ENG', status: 'completed', date: '2025-10-21', time: '21:00', score: { team1: 2, team2: 0 }, winner: 'CFP', completed: true },
         { id: 4, team1: 'CFP', team2: 'CITIS', status: 'completed', date: '2025-10-23', time: '17:00', score: { team1: 2, team2: 0 }, winner: 'CFP', completed: true },
         { id: 5, team1: 'ACC/TAX/FSD', team2: 'AUDIT', status: 'completed', date: '2025-10-22', time: '17:00', score: { team1: 2, team2: 0 }, winner: 'ACC/TAX/FSD', completed:true },
@@ -24,27 +24,27 @@ document.addEventListener('DOMContentLoaded', () => {
         'ENG': { 
             players: ['JavFlo', 'Gedan Barai', 'AanZ', 'Tiga Kilo', 'LoGue_end', '[ATHENA]*Hunterz', 'Koinzeel*', 'Swepeer14', 'lupus'],
             color: '#00ffff',
-            contact: { name: 'Niko', phone: '+62 812-1283-5637' }
+            contact: { name: 'No Name', phone: '+62 123-4567-8910' }
         },
         'CFP': { 
-            players: ['Shubkhi', 'zemos', 'Wally', 'Cloe', 'Exodus', 'DougyMandagri (Fajar)'],
+            players: ['Shubkhi', 'zemos', 'Wally', 'Cloe', 'Exodus', 'DougyMandagri'],
             color: '#ff00ff',
-            contact: { name: 'Dani', phone: '+62 823-3156-5773' }
+            contact: { name: 'No Name', phone: '+62 123-4567-8910' }
         },
         'CITIS': { 
-            players: ['IngusPinguin', '-dominic', 'Bita_1114', 'canonball', 'tas.gemblok', 'firequadr (Fifi)', 'πng (Titus)'],
+            players: ['IngusPinguin', '-dominic', 'Bita_1114', 'canonball', 'tas.gemblok', 'firequadr', 'πng'],
             color: '#ffff00',
-            contact: { name: 'Dinda', phone: '+62 857-1895-6130' }
+            contact: { name: 'No Name', phone: '+62 123-4567-8910' }
         },
         'ACC/TAX/FSD': { 
             players: ['RainyCry-ING', 'Na0mi Tier 1A.', 'b i a w a k', 'totensman', 'lordjuicy', 'Inola', 'el pablo', 'dandelions'],
             color: '#ff5733',
-            contact: { name: 'Yori', phone: '+62 877-7556-8776' }
+            contact: { name: 'No Name', phone: '+62 123-4567-8910' }
         },
         'AUDIT': { 
             players: ['Superjorrr (cici)', 'Iyelito', 'Koro', 'SquishyPapa', 'Na0mi Tier 1A.'],
             color: '#33ff57',
-            contact: { name: 'Yoga', phone: '+62 838-1672-7039' }
+            contact: { name: 'No Name', phone: '+62 123-4567-8910' }
         }
     };
 
@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     upcomingContainer.appendChild(matchCard);
                 });
             } else {
-                upcomingContainer.innerHTML = '<p class="no-matches-message">No upcoming matches scheduled. All remaining matches will be held today!</p>';
+                upcomingContainer.innerHTML = '<p class="no-matches-message">No upcoming matches scheduled. All remaining matches all ready completed!</p>';
             }
         }
 
@@ -1751,4 +1751,341 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(initResultsControls, 100);
     
 
+    // ========================
+    // Game Ended Popup with Fireworks
+    // ========================
+    
+    // Check if current date is past October 24, 2025, 23:59:59 WIB (UTC+7)
+    function checkGameEnded() {
+        // October 24, 2025, 23:59:59 WIB (UTC+7)
+        const deadline = new Date('2025-10-24T23:59:59+07:00');
+        const now = new Date();
+        
+        // For testing purposes, always show the popup
+        showGameEndedPopup();
+        
+        // Check if current time is past the deadline
+        // if (now > deadline) {
+        //     showGameEndedPopup();
+        // }
+    }
+    
+    // Show the game ended popup
+    function showGameEndedPopup() {
+        const popup = document.getElementById('game-ended-popup');
+        const closeBtn = document.querySelector('.close-popup-btn');
+        
+        // Show the popup
+        if (popup) {
+            popup.style.display = 'flex';
+        } else {
+            console.error('Game ended popup element not found!');
+            return;
+        }
+        
+        // Add event listener to close button
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                if (popup) popup.style.display = 'none';
+                // Stop popup fireworks when closing
+                stopPopupFireworks();
+            });
+        }
+        
+        // Close popup when clicking outside content
+        popup.addEventListener('click', function(e) {
+            if (e.target === popup) {
+                popup.style.display = 'none';
+                // Stop popup fireworks when closing
+                stopPopupFireworks();
+            }
+        });
+        
+        // Close popup with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && popup.style.display === 'flex') {
+                popup.style.display = 'none';
+                // Stop popup fireworks when closing
+                stopPopupFireworks();
+            }
+        });
+        
+        // Start popup fireworks when popup is shown
+        initPopupFireworks();
+    }
+    
+    // Fireworks functionality - separate systems for popup and continuous
+    let fireworksInterval;
+    let isFireworksRunning = false;
+    
+    function initFireworks() {
+        console.log('Initializing background fireworks...');
+        
+        // Don't restart if already running
+        if (isFireworksRunning) {
+            return;
+        }
+        
+        isFireworksRunning = true;
+        
+        // Create fireworks at random intervals
+        fireworksInterval = setInterval(createFirework, 800);
+        
+        // Create an initial firework for immediate effect
+        setTimeout(createFirework, 100);
+    }
+    
+    function stopFireworks() {
+        console.log('Stopping fireworks...');
+        if (fireworksInterval) {
+            clearInterval(fireworksInterval);
+            fireworksInterval = null;
+        }
+        
+        isFireworksRunning = false;
+        
+        // Clear all existing fireworks
+        const fireworksContainer = document.getElementById('fireworks-container');
+        if (fireworksContainer) {
+            fireworksContainer.innerHTML = '';
+        }
+    }
+    
+    function createFirework() {
+        const container = document.getElementById('fireworks-container');
+        if (!container) {
+            console.error('Fireworks container not found!');
+            return; // Check if container exists
+        }
+        
+        console.log('Creating background firework...');
+        
+        const colors = ['#00ffff', '#ff00ff', '#ffff00', '#ff5733', '#33ff57', '#ffffff', '#ffcc00', '#ff66cc'];
+        
+        // Random position for the firework
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * (window.innerHeight * 0.7); // Limit to upper portion of screen
+        
+        // Create the main firework element
+        const firework = document.createElement('div');
+        firework.className = 'firework';
+        firework.style.left = `${x}px`;
+        firework.style.top = `${y}px`;
+        firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        firework.style.position = 'absolute';
+        firework.style.width = '5px';
+        firework.style.height = '5px';
+        firework.style.borderRadius = '50%';
+        firework.style.pointerEvents = 'none';
+        container.appendChild(firework);
+        
+        // Create particles after a delay to simulate explosion
+        setTimeout(() => {
+            // Remove main firework
+            if (firework.parentNode) {
+                firework.parentNode.removeChild(firework);
+            }
+            
+            // Create particles after the main firework "explodes"
+            createFireworkParticles(x, y, colors);
+        }, 500);
+    }
+    
+    function createFireworkParticles(x, y, colors) {
+        const container = document.getElementById('fireworks-container');
+        if (!container) {
+            console.error('Fireworks container not found in createFireworkParticles!');
+            return; // Check if container exists
+        }
+        
+        const particleCount = 30 + Math.floor(Math.random() * 20); // 30-50 particles
+        
+        console.log(`Creating ${particleCount} background particles...`);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'firework-particle';
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            particle.style.position = 'absolute';
+            particle.style.width = '4px';
+            particle.style.height = '4px';
+            particle.style.borderRadius = '50%';
+            particle.style.pointerEvents = 'none';
+            
+            // Random color
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.backgroundColor = color;
+            
+            container.appendChild(particle);
+            
+            // Calculate random direction and distance
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 50 + Math.random() * 100;
+            const duration = 800 + Math.random() * 500; // 800-1300ms
+            
+            // Animate the particle
+            const animation = particle.animate([
+                { 
+                    transform: 'translate(0, 0)',
+                    opacity: 1
+                },
+                { 
+                    transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`,
+                    opacity: 0
+                }
+            ], {
+                duration: duration,
+                easing: 'cubic-bezier(0, .9, .57, 1)',
+            });
+            
+            // Remove the particle after animation completes
+            animation.onfinish = () => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            };
+        }
+    }
+    
+    // Popup Fireworks functionality
+    let popupFireworksInterval;
+    let isPopupFireworksRunning = false;
+    
+    function initPopupFireworks() {
+        console.log('Initializing popup fireworks...');
+        
+        // Don't restart if already running
+        if (isPopupFireworksRunning) {
+            return;
+        }
+        
+        isPopupFireworksRunning = true;
+        
+        // Create fireworks at random intervals within popup
+        popupFireworksInterval = setInterval(createPopupFirework, 600);
+    }
+    
+    function stopPopupFireworks() {
+        console.log('Stopping popup fireworks...');
+        if (popupFireworksInterval) {
+            clearInterval(popupFireworksInterval);
+            popupFireworksInterval = null;
+        }
+        
+        isPopupFireworksRunning = false;
+        
+        // Clear all existing popup fireworks
+        const popupFireworksContainer = document.querySelector('.popup-fireworks-container');
+        if (popupFireworksContainer) {
+            popupFireworksContainer.innerHTML = '';
+        }
+    }
+    
+    function createPopupFirework() {
+        const container = document.querySelector('.popup-fireworks-container');
+        if (!container) {
+            console.error('Popup fireworks container not found!');
+            return; // Check if container exists
+        }
+        
+        console.log('Creating popup firework...');
+        
+        const colors = ['#00ffff', '#ff00ff', '#ffff00', '#ff5733', '#33ff57', '#ffffff', '#ffcc00', '#ff66cc'];
+        
+        // Random position for the firework within popup
+        const x = Math.random() * container.offsetWidth;
+        const y = Math.random() * container.offsetHeight * 0.8; // Limit to upper portion of popup
+        
+        // Create the main firework element
+        const firework = document.createElement('div');
+        firework.className = 'popup-firework';
+        firework.style.left = `${x}px`;
+        firework.style.top = `${y}px`;
+        firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        firework.style.position = 'absolute';
+        firework.style.width = '4px';
+        firework.style.height = '4px';
+        firework.style.borderRadius = '50%';
+        firework.style.pointerEvents = 'none';
+        container.appendChild(firework);
+        
+        // Create particles after a delay to simulate explosion
+        setTimeout(() => {
+            // Remove main firework
+            if (firework.parentNode) {
+                firework.parentNode.removeChild(firework);
+            }
+            
+            // Create particles after the main firework "explodes"
+            createPopupFireworkParticles(x, y, colors);
+        }, 400);
+    }
+    
+    function createPopupFireworkParticles(x, y, colors) {
+        const container = document.querySelector('.popup-fireworks-container');
+        if (!container) {
+            console.error('Popup fireworks container not found in createPopupFireworkParticles!');
+            return; // Check if container exists
+        }
+        
+        const particleCount = 20 + Math.floor(Math.random() * 15); // 20-35 particles (slightly less than background for performance)
+        
+        console.log(`Creating ${particleCount} popup particles...`);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'popup-firework-particle';
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            particle.style.position = 'absolute';
+            particle.style.width = '3px';
+            particle.style.height = '3px';
+            particle.style.borderRadius = '50%';
+            particle.style.pointerEvents = 'none';
+            
+            // Random color
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.backgroundColor = color;
+            
+            container.appendChild(particle);
+            
+            // Calculate random direction and distance (smaller range for popup)
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 30 + Math.random() * 60; // Smaller distances for popup
+            const duration = 600 + Math.random() * 400; // 600-1000ms
+            
+            // Animate the particle
+            const animation = particle.animate([
+                { 
+                    transform: 'translate(0, 0)',
+                    opacity: 1
+                },
+                { 
+                    transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`,
+                    opacity: 0
+                }
+            ], {
+                duration: duration,
+                easing: 'cubic-bezier(0, .9, .57, 1)',
+            });
+            
+            // Remove the particle after animation completes
+            animation.onfinish = () => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            };
+        }
+    }
+    
+    // Check if game has ended when page loads
+    checkGameEnded();
+    
+    // Start fireworks immediately when page loads (independent of popup)
+    window.addEventListener('load', function() {
+        // Small delay to ensure DOM is fully loaded
+        setTimeout(initFireworks, 500);
+    });
+    
 });
